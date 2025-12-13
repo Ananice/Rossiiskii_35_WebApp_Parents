@@ -117,7 +117,7 @@
 
 ## 3. Полный цикл текущего процесса взаимодействия
 
-[Диаграмма BPMN процесса](../diagrams/process_as_is.png)
+[Диаграмма BPMN процесса](Rossiiskii_35_WebApp_Parents\docs\diagrams\process_as_is.png)
 
 ### 3.1 Этап 1: Обнаружение проблемы
 
