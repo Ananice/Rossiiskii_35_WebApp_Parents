@@ -140,3 +140,36 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# ===== CUSTOM USER MODEL =====
+# Используем расширенную модель User с ролями из communications приложения
+AUTH_USER_MODEL = 'communications.User'
+
+# ===== LANGUAGE AND TIMEZONE =====
+# Установка русского языка и московского времени
+LANGUAGE_CODE = 'ru-ru'
+TIME_ZONE = 'Europe/Moscow'
+
+# ===== MEDIA FILES =====
+# Конфигурация для загрузки файлов (аватары, вложения, отчеты)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# ===== REST FRAMEWORK =====
+# Конфигурация для Django REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+# ===== CRISPY FORMS =====
+# Конфигурация для Crispy Forms с Bootstrap5
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
