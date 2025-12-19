@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -68,7 +68,9 @@ ROOT_URLCONF = 'college_portal.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),  # ← говорим Django искать здесь
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,6 +82,12 @@ TEMPLATES = [
         },
     },
 ]
+
+
+# DIRS - это список папок, где Django будет искать HTML шаблоны
+# BASE_DIR - это корень проекта (где manage.py)
+# os.path.join(BASE_DIR, 'templates') = ./Rossiiskii_35_WebApp_Parents/templates/
+
 
 WSGI_APPLICATION = 'college_portal.wsgi.application'
 
@@ -134,7 +142,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+# Папка, куда собираются статические файлы при deploy
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Папки, где Django ищет статические файлы локально
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # ← говорим Django искать здесь CSS, JS
+]
+
+# STATIC_URL = '/static/' - это URL, по которому браузер запрашивает файлы
+# STATICFILES_DIRS - список папок, где находятся CSS, JS, картинки
+# Когда напишешь {% static 'css/style.css' %}, Django найдёт его в static/css/
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
