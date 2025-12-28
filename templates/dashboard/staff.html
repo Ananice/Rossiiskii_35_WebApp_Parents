@@ -1,0 +1,176 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block title %}Кабинет сотрудника - МУИВ{% endblock %}
+
+{% block content %}
+
+<!-- ===================== ЗАГОЛОВОК ===================== -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h1 class="mb-0">
+            <i class="fas fa-chalkboard-user text-info"></i> Кабинет сотрудника
+        </h1>
+        <!-- text-info = голубой текст -->
+        
+        <small class="text-muted">Добро пожаловать, {{ user.get_full_name|default:user.username }}!</small>
+    </div>
+</div>
+
+<!-- ===================== БЫСТРАЯ СТАТИСТИКА ===================== -->
+<!-- 3 маленькие карточки со статистикой -->
+<div class="row mb-4">
+    
+    <!-- НЕПРОЧИТАННЫЕ СООБЩЕНИЯ -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <!-- text-center = центрировать текст -->
+                
+                <h3 class="text-info">{{ unread_messages }}</h3>
+                <p class="mb-0 text-muted">Непрочитанных сообщений</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- НАЗНАЧЕНО СТУДЕНТОВ -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="text-success">{{ assigned_students }}</h3>
+                <p class="mb-0 text-muted">Назначено студентов</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ОЖИДАЮЩИХ ОТЧЁТОВ -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="text-warning">{{ pending_reports }}</h3>
+                <p class="mb-0 text-muted">Ожидающих отчётов</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== ОСНОВНЫЕ ДЕЙСТВИЯ ===================== -->
+<!-- Большие кнопки для главных операций -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">
+                    <i class="fas fa-tasks"></i> Основные действия
+                </h5>
+            </div>
+            
+            <div class="card-body">
+                <!-- КНОПКА 1: Написать сообщение -->
+                <a href="/messages/" class="btn btn-primary btn-lg">
+                    <!-- btn-lg = большая кнопка -->
+                    
+                    <i class="fas fa-envelope"></i> Написать сообщение родителю
+                </a>
+
+                <!-- КНОПКА 2: Создать отчёт -->
+                <a href="/reports/new/" class="btn btn-success btn-lg">
+                    <i class="fas fa-file-alt"></i> Создать отчёт о студенте
+                </a>
+
+                <!-- КНОПКА 3: Список студентов -->
+                <a href="/students/" class="btn btn-info btn-lg">
+                    <i class="fas fa-list"></i> Мои студенты
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== ДВА СТОЛБЦА: СООБЩЕНИЯ И ВСТРЕЧИ ===================== -->
+<div class="row">
+    
+    <!-- ЛЕВЫЙ СТОЛБЕЦ: ПОСЛЕДНИЕ СООБЩЕНИЯ -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">
+                    <i class="fas fa-comments"></i> Последние сообщения
+                </h5>
+            </div>
+
+            <!-- СПИСОК СООБЩЕНИЙ -->
+            <div class="list-group list-group-flush">
+                <!-- list-group-flush = удалить боковые отступы -->
+                
+                {% for message in recent_messages %}
+                    <!-- ДЛЯ КАЖДОГО СООБЩЕНИЯ -->
+                    <a href="/messages/#msg-{{ message.id }}" class="list-group-item list-group-item-action">
+                        <!-- list-group-item-action = ссылка выглядит как элемент списка -->
+                        <!-- #msg-{{ message.id }} = якорь для перемещения на нужное сообщение -->
+                        
+                        <!-- СТРОКА С ИМЕНЕМ И ДАТОЙ -->
+                        <div class="d-flex w-100 justify-content-between">
+                            <!-- d-flex = flexbox -->
+                            <!-- w-100 = ширина 100% -->
+                            <!-- justify-content-between = разместить по краям -->
+                            
+                            <strong>{{ message.sender.get_full_name|default:message.sender.username }}</strong>
+                            <small class="text-muted">{{ message.created_at|date:"d.m.Y" }}</small>
+                            <!-- |date:"d.m.Y" = дата в формате 18.12.2025 -->
+                        </div>
+
+                        <!-- ТЕКСТ СООБЩЕНИЯ -->
+                        <p class="mb-1 text-truncate">
+                            <!-- mb-1 = маленький нижний отступ -->
+                            <!-- text-truncate = обрезать длинный текст (многоточие) -->
+                            
+                            {{ message.content }}
+                        </p>
+                    </a>
+                {% empty %}
+                    <!-- ЕСЛИ НЕ БЫЛО СООБЩЕНИЙ -->
+                    <div class="list-group-item text-center text-muted py-3">
+                        Нет сообщений
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- ПРАВЫЙ СТОЛБЕЦ: БЛИЖАЙШИЕ ВСТРЕЧИ -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">
+                    <i class="fas fa-calendar-alt"></i> Ближайшие встречи
+                </h5>
+            </div>
+
+            <!-- СПИСОК ВСТРЕЧ -->
+            <div class="list-group list-group-flush">
+                
+                <!-- ВСТРЕЧА 1 -->
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <strong>Собрание родителей</strong>
+                        <small class="badge bg-primary">20 дек</small>
+                    </div>
+                    <small class="text-muted">14:00 - Актовый зал</small>
+                </div>
+
+                <!-- ВСТРЕЧА 2 -->
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <strong>Консультация</strong>
+                        <small class="badge bg-info">22 дек</small>
+                    </div>
+                    <small class="text-muted">16:00 - Кабинет</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

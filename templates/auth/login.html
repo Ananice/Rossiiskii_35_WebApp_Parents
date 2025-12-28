@@ -1,0 +1,172 @@
+{% extends 'base/base.html' %}
+<!-- ^^ extends = наследуем base.html (используем его макет) -->
+
+{% load static %}
+
+{% block title %}Вход - МУИВ Портал{% endblock %}
+<!-- ^^ Меняем заголовок вкладки для этой страницы -->
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <!-- justify-content-center = центрировать по горизонтали -->
+        <!-- mt-5 = большой отступ сверху -->
+        
+        <div class="col-md-6">
+            <!-- col-md-6 = занимает половину экрана на больших мониторах -->
+            
+            <!-- КАРТОЧКА С ФОРМОЙ ВХОДА -->
+            <div class="card shadow-lg">
+                <!-- shadow-lg = тень под карточкой -->
+                
+                <!-- ЗАГОЛОВОК КАРТОЧКИ -->
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h2 class="mb-0">
+                        <i class="fas fa-sign-in-alt"></i> Вход в систему
+                    </h2>
+                    <small>Веб-портал взаимодействия</small>
+                </div>
+
+                <!-- ОСНОВНОЕ СОДЕРЖИМОЕ КАРТОЧКИ -->
+                <div class="card-body p-4">
+                    
+                    <!-- ОШИБКИ ВХОДА (если логин/пароль неправильные) -->
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            <strong>❌ Ошибка входа:</strong>
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- ФОРМА ВХОДА -->
+                    <form method="post" class="needs-validation" novalidate>
+                        <!-- method="post" = отправлять данные защищённо -->
+                        <!-- needs-validation = класс для Bootstrap валидации -->
+                        
+                        {% csrf_token %}
+                        <!-- csrf_token = защита от взломов (обязательно в каждой форме) -->
+
+                        <!-- ================== ПОЛЕ ЛОГИНА ================== -->
+                        <div class="mb-3">
+                            <!-- mb-3 = отступ снизу -->
+                            
+                            <label for="id_username" class="form-label">
+                                <i class="fas fa-user"></i> Логин
+                            </label>
+                            
+                            <input 
+                                type="text" 
+                                class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                                <!-- is-invalid = красная граница, если ошибка -->
+                                
+                                id="id_username"
+                                name="username"
+                                placeholder="Введите логин"
+                                required
+                                value="{{ form.username.value|default:'' }}"
+                            >
+                            
+                            <!-- СООБЩЕНИЕ ОБ ОШИБКЕ (если есть) -->
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback d-block">
+                                    <!-- d-block = показать ошибку -->
+                                    {{ form.username.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- ================== ПОЛЕ ПАРОЛЯ ================== -->
+                        <div class="mb-3">
+                            <label for="id_password" class="form-label">
+                                <i class="fas fa-lock"></i> Пароль
+                            </label>
+                            
+                            <input 
+                                type="password" 
+                                class="form-control {% if form.password.errors %}is-invalid{% endif %}"
+                                id="id_password"
+                                name="password"
+                                placeholder="Введите пароль"
+                                required
+                            >
+                            
+                            {% if form.password.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.password.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- ================== СПРАВКА О РОЛЯХ ================== -->
+                        <!-- Инфо-блок с тестовыми данными для демо -->
+                        <div class="alert alert-info mb-4">
+                            <small>
+                                <strong>👨‍💼 Тестовые учётные данные:</strong><br>
+                                <code>Админ:</code> admin / admin123<br>
+                                <code>Сотрудник:</code> staff1 / staff123<br>
+                                <code>Родитель:</code> parent1 / parent123
+                            </small>
+                        </div>
+
+                        <!-- ================== КНОПКА ВХОДА ================== -->
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                            <!-- w-100 = ширина 100% -->
+                            <!-- py-2 = отступы сверху/снизу -->
+                            <!-- fw-bold = жирный текст -->
+                            
+                            <i class="fas fa-arrow-right"></i> Войти
+                        </button>
+                    </form>
+
+                    <!-- РАЗДЕЛИТЕЛЬ -->
+                    <hr class="my-4">
+
+                    <!-- ПРИМЕЧАНИЕ -->
+                    <div class="alert alert-light border-1">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle"></i>
+                            Это демо-система для учебного проекта.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ИНФОРМАЦИЯ ВНИЗУ -->
+            <div class="text-center mt-4">
+                <small class="text-muted">
+                    Веб-приложение взаимодействия сотрудников и родителей<br>
+                    Московский университет имени С.Ю. Витте
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================== JAVASCRIPT ДЛЯ ВАЛИДАЦИИ ФОРМЫ ================== -->
+<script>
+    // Когда страница загружена, добавить проверку формы
+    (function() {
+        'use strict'; // Строгий режим (ловит ошибки)
+        
+        // Найти все формы с классом needs-validation
+        const forms = document.querySelectorAll('.needs-validation');
+        
+        // Для каждой формы:
+        Array.from(forms).forEach(form => {
+            // При отправке формы (на кнопку "Войти")
+            form.addEventListener('submit', event => {
+                // Если форма НЕ прошла проверку
+                if (!form.checkValidity()) {
+                    // Остановить отправку
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                // Добавить класс was-validated (показать ошибки красным)
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %}

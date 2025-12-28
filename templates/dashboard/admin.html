@@ -1,0 +1,217 @@
+{% extends 'base/base.html' %}
+<!-- ^^ Берём макет из base.html -->
+
+{% load static %}
+
+{% block title %}Админ Панель - МУИВ{% endblock %}
+<!-- ^^ Заголовок вкладки браузера -->
+
+{% block content %}
+
+<!-- ===================== ЗАГОЛОВОК СТРАНИЦЫ ===================== -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h1 class="mb-0">
+            <i class="fas fa-shield-alt text-danger"></i> Панель администратора
+        </h1>
+        <!-- mb-0 = убрать нижний отступ -->
+        <!-- text-danger = красный цвет текста -->
+        
+        <small class="text-muted">Управление системой и пользователями</small>
+    </div>
+</div>
+
+<!-- ===================== СТАТИСТИКА (4 КАРТОЧКИ) ===================== -->
+<!-- Показываем основные числа: всего пользователей, сообщений и т.д. -->
+<div class="row mb-4">
+    
+    <!-- КАРТОЧКА 1: ВСЕГО ПОЛЬЗОВАТЕЛЕЙ -->
+    <div class="col-md-3">
+        <!-- col-md-3 = 25% ширины экрана на больших мониторах -->
+        
+        <div class="card bg-primary text-white">
+            <!-- bg-primary = синий фон -->
+            <!-- text-white = белый текст -->
+            
+            <div class="card-body">
+                <h6 class="card-title">Всего пользователей</h6>
+                <h2 class="mb-0">{{ users_count }}</h2>
+                <!-- {{ users_count }} = переменная из views.py -->
+            </div>
+        </div>
+    </div>
+
+    <!-- КАРТОЧКА 2: ВСЕГО СООБЩЕНИЙ -->
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <!-- bg-success = зелёный фон -->
+            
+            <div class="card-body">
+                <h6 class="card-title">Сообщений</h6>
+                <h2 class="mb-0">{{ messages_count }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- КАРТОЧКА 3: ОТЧЁТОВ -->
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <!-- bg-info = голубой фон -->
+            
+            <div class="card-body">
+                <h6 class="card-title">Отчётов</h6>
+                <h2 class="mb-0">{{ reports_count }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- КАРТОЧКА 4: АКТИВНЫХ СЕССИЙ -->
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <!-- bg-warning = жёлтый фон -->
+            
+            <div class="card-body">
+                <h6 class="card-title">Активных сессий</h6>
+                <h2 class="mb-0">{{ active_sessions }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== КНОПКИ БЫСТРЫХ ДЕЙСТВИЙ ===================== -->
+<!-- Ссылки на основные действия администратора -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-light">
+                <!-- bg-light = светло-серый фон -->
+                
+                <h5 class="mb-0">
+                    <i class="fas fa-tools"></i> Быстрые действия
+                </h5>
+            </div>
+            
+            <div class="card-body">
+                <!-- КНОПКА 1: Админ-панель Django -->
+                <a href="/admin/" class="btn btn-sm btn-primary">
+                    <!-- btn-sm = маленькая кнопка -->
+                    <!-- btn-primary = синяя кнопка -->
+                    
+                    <i class="fas fa-cog"></i> Админ-панель Django
+                </a>
+
+                <!-- КНОПКА 2: Управление пользователями -->
+                <a href="/admin/auth/user/" class="btn btn-sm btn-info">
+                    <i class="fas fa-users"></i> Управление пользователями
+                </a>
+
+                <!-- КНОПКА 3: Сообщения -->
+                <a href="/admin/communications/message/" class="btn btn-sm btn-success">
+                    <i class="fas fa-envelope"></i> Сообщения
+                </a>
+
+                <!-- КНОПКА 4: Отчёты -->
+                <a href="/admin/reports/report/" class="btn btn-sm btn-warning">
+                    <i class="fas fa-file-alt"></i> Отчёты
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== ТАБЛИЦА ПОЛЬЗОВАТЕЛЕЙ ===================== -->
+<!-- Список всех пользователей в системе -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">
+                    <i class="fas fa-users"></i> Список пользователей
+                </h5>
+            </div>
+
+            <!-- ТАБЛИЦА -->
+            <div class="table-responsive">
+                <!-- table-responsive = скроллируется на мобильных -->
+                
+                <table class="table table-hover mb-0">
+                    <!-- table-hover = строка подсвечивается при наведении мышки -->
+                    <!-- mb-0 = убрать нижний отступ -->
+                    
+                    <!-- ШАПКА ТАБЛИЦЫ -->
+                    <thead class="table-light">
+                        <!-- table-light = светло-серый фон -->
+                        
+                        <tr>
+                            <!-- tr = строка таблицы -->
+                            <!-- th = заголовочная ячейка -->
+                            
+                            <th>ID</th>
+                            <th>ФИ</th>
+                            <th>Email</th>
+                            <th>Роль</th>
+                            <th>Статус</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+
+                    <!-- ТЕЛО ТАБЛИЦЫ (ДАННЫЕ) -->
+                    <tbody>
+                        <!-- Цикл: для каждого пользователя -->
+                        {% for user in users %}
+                        <tr>
+                            <!-- td = обычная ячейка -->
+                            
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.get_full_name|default:user.username }}</td>
+                            <!-- |default:user.username = если ФИ нет, показать логин -->
+                            
+                            <td>{{ user.email }}</td>
+                            
+                            <!-- РОЛЬ (ЗНАЧОК) -->
+                            <td>
+                                <span class="badge bg-{{ user.role|default:'secondary' }}">
+                                    <!-- badge = маленький прямоугольник -->
+                                    
+                                    {{ user.role|default:'unknown' }}
+                                </span>
+                            </td>
+
+                            <!-- СТАТУС (АКТИВЕН/НЕАКТИВЕН) -->
+                            <td>
+                                {% if user.is_active %}
+                                    <!-- Если пользователь активный -->
+                                    <span class="badge bg-success">Активен</span>
+                                {% else %}
+                                    <!-- Иначе неактивный -->
+                                    <span class="badge bg-danger">Неактивен</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- ДЕЙСТВИЯ (КНОПКА РЕДАКТИРОВАНИЯ) -->
+                            <td>
+                                <a href="/admin/auth/user/{{ user.id }}/change/" class="btn btn-xs btn-warning">
+                                    <!-- /change/ = Django страница редактирования -->
+                                    
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <!-- Если нет пользователей -->
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">
+                                <!-- colspan="6" = ячейка займёт 6 колонок -->
+                                Нет пользователей
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+<!-- ^^ Конец блока content -->
