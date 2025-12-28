@@ -1,0 +1,430 @@
+/* ===================== ПЕРЕМЕННЫЕ ЦВЕТОВ ===================== */
+/* Определяем основные цвета один раз, затем используем везде */
+:root {
+    --primary: #0d6efd;      /* Синий (основной цвет) */
+    --success: #198754;      /* Зелёный (успех) */
+    --danger: #dc3545;       /* Красный (ошибка) */
+    --warning: #ffc107;      /* Жёлтый (предупреждение) */
+    --info: #0dcaf0;         /* Голубой (информация) */
+    --light: #f8f9fa;        /* Светлый серый */
+    --dark: #212529;         /* Тёмный серый */
+}
+
+/* ===================== ГЛОБАЛЬНЫЕ СТИЛИ ===================== */
+/* Стили, которые применяются ко ВСЕМУ сайту */
+
+* {
+    /* * = ВСЕ элементы */
+    margin: 0;               /* Убрать все отступы */
+    padding: 0;              /* Убрать все внутренние отступы */
+    box-sizing: border-box;  /* Размеры считаются корректно */
+}
+
+body {
+    /* Стили для всего body (весь сайт) */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    /* Шрифт: сначала Apple, потом Windows, потом стандартный */
+    
+    background-color: #f5f7fa;  /* Фон страницы: светло-серый */
+    color: #333;                /* Цвет текста: серый */
+    line-height: 1.6;           /* Высота строки: удобно читать */
+}
+
+/* ===================== НАВИГАЦИОННАЯ ПАНЕЛЬ (NAVBAR) ===================== */
+
+.navbar {
+    /* Меню в верху сайта */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Тень под меню (тонкая) */
+}
+
+.navbar-brand {
+    /* Логотип/название слева в меню */
+    font-size: 1.5rem;      /* Размер текста */
+    font-weight: 600;       /* Жирный */
+    letter-spacing: -0.5px; /* Сжать текст */
+}
+
+/* ===================== КАРТОЧКИ (CARDS) ===================== */
+
+.card {
+    /* Красивые белые коробочки */
+    border: 1px solid rgba(0, 0, 0, 0.05);  /* Граница: очень светлая */
+    border-radius: 8px;                      /* Округлённые углы */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);  /* Тень: очень тонкая */
+    transition: all 0.3s ease;               /* Анимация смены свойств за 0.3 секунды */
+}
+
+.card:hover {
+    /* Когда мышка наведена на карточку */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    /* Тень становится толще (поднимается) */
+}
+
+.card-header {
+    /* Заголовок карточки */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);  /* Разделитель */
+}
+
+/* ===================== КНОПКИ (BUTTONS) ===================== */
+
+.btn {
+    /* Все кнопки */
+    border-radius: 6px;      /* Округлённые углы */
+    font-weight: 500;        /* Жирный текст */
+    transition: all 0.2s ease;  /* Плавная анимация */
+    border: none;            /* Убрать стандартную границу */
+}
+
+/* СИНЯЯ КНОПКА (PRIMARY) */
+.btn-primary {
+    background-color: var(--primary);  /* Синий фон */
+    border-color: var(--primary);
+}
+
+.btn-primary:hover {
+    /* Когда мышка на кнопке */
+    background-color: #0b5ed7;         /* Синий темнее */
+    border-color: #0b5ed7;
+    transform: translateY(-2px);       /* Поднять кнопку на 2px */
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);  /* Тень */
+}
+
+.btn-primary:active {
+    /* Когда нажимаем на кнопку */
+    background-color: #0a58ca;         /* Синий ещё темнее */
+    transform: translateY(0);          /* Вернуть на место */
+}
+
+/* ЗЕЛЁНАЯ КНОПКА (SUCCESS) */
+.btn-success {
+    background-color: var(--success);
+}
+
+.btn-success:hover {
+    background-color: #157347;
+    box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+}
+
+/* КРАСНАЯ КНОПКА (DANGER) */
+.btn-danger {
+    background-color: var(--danger);
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+/* ГОЛУБАЯ КНОПКА (INFO) */
+.btn-info {
+    background-color: var(--info);
+    color: white;
+}
+
+.btn-info:hover {
+    background-color: #0bc5d5;
+    box-shadow: 0 4px 12px rgba(13, 202, 240, 0.3);
+}
+
+/* ===================== ФОРМЫ (INPUTS) ===================== */
+
+.form-control {
+    /* Текстовые поля, текстареа и т.д. */
+    border-radius: 6px;            /* Округлённые углы */
+    border: 1px solid #dee2e6;     /* Серая граница */
+    transition: all 0.2s ease;     /* Плавная смена */
+    padding: 0.6rem 0.75rem;       /* Отступы внутри */
+}
+
+.form-control:focus {
+    /* Когда в поле активно (курсор внутри) */
+    border-color: var(--primary);  /* Синяя граница */
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);  /* Лёгкая тень */
+    outline: none;                 /* Убрать стандартную граница */
+}
+
+.form-label {
+    /* Подписи над полями ("Логин", "Пароль" и т.д.) */
+    font-weight: 500;          /* Жирный */
+    color: var(--dark);        /* Тёмный цвет */
+    margin-bottom: 0.5rem;     /* Отступ снизу */
+}
+
+/* ===================== ТАБЛИЦЫ (TABLES) ===================== */
+
+.table {
+    /* Таблицы данных */
+    border-collapse: separate;  /* Отдельные границы ячеек */
+    border-spacing: 0;
+}
+
+.table thead th {
+    /* Шапка таблицы (заголовки) */
+    border-bottom: 2px solid #dee2e6;  /* Толстая граница */
+    font-weight: 600;                  /* Жирный */
+    text-transform: uppercase;         /* БОЛЬШИЕ БУКВЫ */
+    font-size: 0.75rem;                /* Мелкий шрифт */
+    letter-spacing: 0.5px;             /* Расстояние между букв */
+}
+
+.table tbody tr:hover {
+    /* Когда мышка на строке таблицы */
+    background-color: rgba(0, 0, 0, 0.02);  /* Очень светлый фон */
+}
+
+/* ===================== ЗНАЧКИ (BADGES) ===================== */
+
+.badge {
+    /* Маленькие цветные прямоугольники */
+    border-radius: 4px;           /* Округлённые углы */
+    padding: 0.35rem 0.65rem;     /* Отступы */
+    font-weight: 500;             /* Жирный */
+    font-size: 0.8rem;            /* Мелкий */
+    display: inline-block;        /* На одной строке */
+}
+
+.badge.bg-primary {
+    background-color: var(--primary);
+    color: white;
+}
+
+.badge.bg-success {
+    background-color: var(--success);
+    color: white;
+}
+
+.badge.bg-danger {
+    background-color: var(--danger);
+    color: white;
+}
+
+.badge.bg-warning {
+    background-color: var(--warning);
+    color: #212529;  /* Тёмный текст на жёлтом фоне */
+}
+
+.badge.bg-info {
+    background-color: var(--info);
+    color: white;
+}
+
+/* ===================== УВЕДОМЛЕНИЯ (ALERTS) ===================== */
+
+.alert {
+    /* Сообщения об ошибках, успехе и т.д. */
+    border-radius: 6px;     /* Округлённые углы */
+    border: none;           /* Без границы */
+    margin-bottom: 1rem;    /* Отступ снизу */
+}
+
+.alert-success {
+    /* Зелёное уведомление (успех) */
+    background-color: rgba(25, 135, 84, 0.1);  /* Светло-зелёный фон */
+    border-left: 4px solid var(--success);     /* Зелёная полоса слева */
+    color: #0f5132;                             /* Тёмно-зелёный текст */
+}
+
+.alert-danger {
+    /* Красное уведомление (ошибка) */
+    background-color: rgba(220, 53, 69, 0.1);
+    border-left: 4px solid var(--danger);
+    color: #842029;
+}
+
+.alert-warning {
+    /* Жёлтое уведомление (предупреждение) */
+    background-color: rgba(255, 193, 7, 0.1);
+    border-left: 4px solid var(--warning);
+    color: #664d03;
+}
+
+.alert-info {
+    /* Голубое уведомление (информация) */
+    background-color: rgba(13, 202, 240, 0.1);
+    border-left: 4px solid var(--info);
+    color: #055160;
+}
+
+/* ===================== СООБЩЕНИЯ И ЧАТ ===================== */
+
+.message-item {
+    /* Элемент сообщения в чате */
+    animation: slideIn 0.3s ease;  /* Анимация появления */
+}
+
+@keyframes slideIn {
+    /* Определяем анимацию slideIn */
+    from {
+        /* Начальное состояние */
+        opacity: 0;                 /* Прозрачное */
+        transform: translateY(10px); /* Сдвинуто на 10px вниз */
+    }
+    to {
+        /* Конечное состояние */
+        opacity: 1;                 /* Видно */
+        transform: translateY(0);    /* На месте */
+    }
+}
+
+/* ===================== БОКОВОЕ МЕНЮ/СПИСОК ===================== */
+
+.list-group-item {
+    /* Элемент списка */
+    border: none;                       /* Без границы */
+    border-bottom: 1px solid #dee2e6;  /* Только нижняя граница */
+    transition: all 0.2s ease;         /* Плавная смена */
+}
+
+.list-group-item:hover {
+    /* Когда мышка на элементе */
+    background-color: var(--light);     /* Светлый фон */
+    padding-left: 1.5rem;               /* Сдвинуть вправо */
+}
+
+.list-group-item.active {
+    /* Активный элемент (выбран) */
+    background-color: var(--primary);   /* Синий фон */
+    color: white;                        /* Белый текст */
+}
+
+/* ===================== ПОДВАЛ (FOOTER) ===================== */
+
+footer {
+    /* Низ страницы */
+    border-top: 1px solid rgba(0, 0, 0, 0.1);  /* Граница сверху */
+    margin-top: auto;  /* Прижать к низу */
+}
+
+/* ===================== АДАПТИВНОСТЬ (МОБИЛЬНЫЕ УСТРОЙСТВА) ===================== */
+
+@media (max-width: 768px) {
+    /* На маленьких экранах (планшеты, телефоны) */
+    
+    .navbar-brand {
+        font-size: 1.25rem;  /* Меньше логотип */
+    }
+    
+    .card {
+        margin-bottom: 1rem;  /* Больше отступа между карточками */
+    }
+    
+    .btn-lg {
+        font-size: 0.9rem;    /* Меньше текст на кнопках */
+    }
+    
+    .table {
+        font-size: 0.85rem;   /* Мелче таблица */
+    }
+}
+
+/* ===================== УТИЛИТЫ (ВСПОМОГАТЕЛЬНЫЕ КЛАССЫ) ===================== */
+/* Классы для частых операций */
+
+.text-truncate {
+    /* Обрезать длинный текст */
+    overflow: hidden;
+    text-overflow: ellipsis;  /* Многоточие в конце */
+    white-space: nowrap;      /* Не переносить на новую строку */
+}
+
+.min-vh-100 {
+    /* Минимальная высота в 100% видимого окна */
+    min-height: 100vh;
+}
+
+.shadow-lg {
+    /* Большая тень */
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+.border-1 {
+    /* Тонкая граница */
+    border: 1px solid #dee2e6 !important;
+}
+
+/* ===================== АНИМАЦИИ ===================== */
+
+@keyframes fadeIn {
+    /* Плавное появление */
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    /* Класс для применения анимации */
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes pulse {
+    /* Пульсирующая анимация */
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.pulse {
+    /* Класс пульсации */
+    animation: pulse 2s infinite;
+}
+
+/* ===================== ТЕМОВЫЕ СВОЙСТВА ===================== */
+/* Для будущей поддержки тёмного режима */
+
+:root {
+    --transition-time: 0.3s;    /* Время анимаций */
+    --border-radius: 8px;       /* Скругление углов */
+}
+
+/* ===================== ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ КОНКРЕТНЫХ ЭЛЕМЕНТОВ ===================== */
+
+/* Кнопка "Выход" в меню - красная */
+.navbar-text .text-danger {
+    color: var(--danger) !important;
+}
+
+/* Активный элемент в меню - подчёркнут */
+.nav-link.active {
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 0.25rem;
+}
+
+/* Заголовки в темах */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--dark);
+    margin-bottom: 1rem;
+}
+
+/* Ссылки */
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: #0b5ed7;
+    text-decoration: underline;
+}
+
+/* Цветные текстовые классы */
+.text-primary { color: var(--primary); }
+.text-success { color: var(--success); }
+.text-danger { color: var(--danger); }
+.text-warning { color: var(--warning); }
+.text-info { color: var(--info); }
+.text-muted { color: #6c757d; }
+
+/* Цветные фоны */
+.bg-primary { background-color: var(--primary); }
+.bg-success { background-color: var(--success); }
+.bg-danger { background-color: var(--danger); }
+.bg-warning { background-color: var(--warning); }
+.bg-info { background-color: var(--info); }
