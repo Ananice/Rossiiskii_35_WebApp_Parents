@@ -1,190 +1,247 @@
-# ===================== ИМПОРТЫ =====================
-# Подключаем библиотеки, которые нам нужны
+"""================================================================================
+МОДУЛЬ: college_portal.views
+ОПИСАНИЕ: Представления (views) для главного приложения колледжа
+КОМПЕТЕНЦИИ: ПК-1, ПК-7, ПК-9, ПК-11
+================================================================================
 
-from django.shortcuts import render, redirect  # render = показать HTML, redirect = перенаправить
-from django.contrib.auth import authenticate, login, logout  # Для входа/выхода
-from django.contrib.auth.decorators import login_required  # Проверка авторизации
-from django.contrib.auth.models import User  # Модель пользователя Django
-from django.http import JsonResponse  # Ответ JSON (для AJAX)
-from django.views.decorators.http import require_http_methods  # Проверка метода HTTP
-from django.db.models import Q  # Для сложных фильтров в БД
-from django.utils.timezone import now  # Текущее время
-import json  # Работа с JSON
+ФУНКЦИОНАЛ:
+  - Аутентификация пользователя (вход/выход)
+  - Дашборды для разных ролей (админ, сотрудник, родитель)
+  - API для работы с сообщениями
+  - Обработка ошибок
 
-# Подключаем свои модели
-from communications.models import Message  # Модель сообщений
-from students.models import Student  # Модель студентов
-from employees.models import Employee  # Модель сотрудников
-from parents.models import Parent  # Модель родителей
+РОЛИ ПОЛЬЗОВАТЕЛЕЙ:
+  1. Администратор (administrator) - полный доступ к системе
+  2. Сотрудник (staff) - доступ к студентам и сообщениям
+  3. Родитель (parent) - доступ только к информации о своём ребёнке
+  4. Гость (guest) - нет доступа (перенаправление на login)
+"""
 
-# ===================== 1. ФУНКЦИЯ: ГЛАВНАЯ СТРАНИЦА / РЕДИРЕКТ =====================
-# Если пользователь зашёл на главную, перенаправить его на логин или панель
+# ==============================================================================
+# РАЗДЕЛ 1: ИМПОРТЫ
+# ==============================================================================
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+from django.db.models import Q
+from django.utils.timezone import now
+import json
+
+from communications.models import User, Message
+from students.models import Student
+from employees.models import Employee
+from parents.models import Parent
+
+
+# ==============================================================================
+# РАЗДЕЛ 2: ГЛАВНАЯ СТРАНИЦА
+# ==============================================================================
 
 def index(request):
     """
-    Главная страница приложения
+    ENDPOINT: GET /
+    ОПИСАНИЕ: Главная страница приложения
     
-    request = объект запроса от браузера
-    Возвращает: редирект на /login или /dashboard (в зависимости от авторизации)
+    ЛОГИКА:
+      - Если пользователь авторизован → редирект на /dashboard/
+      - Если не авторизован → редирект на /login/
+    
+    ПАРАМЕТРЫ:
+      request (HttpRequest): Объект запроса
+    
+    ВОЗВРАЩАЕТ:
+      HttpResponseRedirect: Редирект на dashboard или login
     """
-    
-    # Если пользователь уже авторизован
     if request.user.is_authenticated:
-        # Перенаправить его на панель управления
         return redirect('dashboard')
-    else:
-        # Если нет - перенаправить на страницу входа
-        return redirect('login')
-
-
-# ===================== 2. ФУНКЦИЯ: ЛОГИН (ВХОД В СИСТЕМУ) =====================
-# Обработка входа пользователя в систему
-
-@require_http_methods(["GET", "POST"])  # Принимаем GET и POST запросы
-def login_view(request):
-    """
-    Страница входа в систему
-    
-    GET: показать форму входа
-    POST: проверить логин/пароль и войти
-    """
-    
-    # ОБРАБОТКА GET ЗАПРОСА (показ формы)
-    if request.method == 'GET':
-        # Если пользователь уже авторизован, не показывать логин
-        if request.user.is_authenticated:
-            return redirect('dashboard')
-        
-        # Иначе показать форму входа
-        return render(request, 'auth/login.html')
-    
-    # ОБРАБОТКА POST ЗАПРОСА (отправка формы)
-    if request.method == 'POST':
-        # Получить логин и пароль из формы
-        username = request.POST.get('username', '').strip()
-        password = request.POST.get('password', '').strip()
-        
-        # Проверить, заполнены ли оба поля
-        if not username or not password:
-            # Если нет - показать ошибку
-            return render(request, 'auth/login.html', {
-                'error': 'Заполните оба поля'
-            })
-        
-        # Проверить учётные данные
-        # authenticate = найти пользователя с таким логином и паролем
-        user = authenticate(request, username=username, password=password)
-        
-        if user is not None:
-            # Если пользователь найден и пароль правильный
-            
-            # Войти в систему
-            login(request, user)
-            
-            # Перенаправить на панель управления
-            return redirect('dashboard')
-        else:
-            # Если логин/пароль неправильные
-            return render(request, 'auth/login.html', {
-                'error': '❌ Неверный логин или пароль'
-            })
-
-
-# ===================== 3. ФУНКЦИЯ: ВЫХОД ИЗ СИСТЕМЫ =====================
-# Разлогинить пользователя и перенаправить на логин
-
-@login_required(login_url='login')  # Проверка: пользователь должен быть авторизован
-def logout_view(request):
-    """
-    Выход из системы
-    """
-    
-    # Разлогинить пользователя
-    logout(request)
-    
-    # Перенаправить на страницу входа
     return redirect('login')
 
 
-# ===================== 4. ФУНКЦИЯ: ПАНЕЛЬ УПРАВЛЕНИЯ (DASHBOARD) =====================
-# Главная страница после входа (разная для каждой роли)
+# ==============================================================================
+# РАЗДЕЛ 3: АУТЕНТИФИКАЦИЯ
+# ==============================================================================
 
-@login_required(login_url='login')  # Только для авторизованных
+@require_http_methods(["GET", "POST"])
+def login_view(request):
+    """
+    ENDPOINT: GET/POST /login/
+    ОПИСАНИЕ: Страница входа в систему
+    
+    GET: Показать форму входа
+    POST: Обработать данные формы входа
+    
+    ПОЛЯ ФОРМЫ (POST):
+      username (str): Логин пользователя (обязательное)
+      password (str): Пароль (обязательное)
+    
+    ПРИМЕРЫ:
+      # GET запрос
+      curl -X GET http://localhost:8000/login/
+      
+      # POST запрос
+      curl -X POST http://localhost:8000/login/ \\
+        -d "username=ivanov&password=secret123"
+    
+    ВОЗВРАЩАЕТ (GET):
+      HttpResponse: Рендер шаблона auth/login.html
+    
+    ВОЗВРАЩАЕТ (POST - успех):
+      HttpResponseRedirect: Редирект на /dashboard/
+    
+    ВОЗВРАЩАЕТ (POST - ошибка):
+      HttpResponse: Рендер login.html с сообщением об ошибке
+    """
+    
+    # ⭐ ОБРАБОТКА GET ЗАПРОСА
+    if request.method == 'GET':
+        # Если уже авторизован, перенаправляем на дашборд
+        if request.user.is_authenticated:
+            return redirect('dashboard')
+        # Показываем форму входа
+        return render(request, 'auth/login.html')
+    
+    # ⭐ ОБРАБОТКА POST ЗАПРОСА
+    if request.method == 'POST':
+        # Получаем данные из формы
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '').strip()
+        
+        # Проверяем, что оба поля заполнены
+        if not username or not password:
+            return render(request, 'auth/login.html', {
+                'error': 'Заполните оба поля (логин и пароль)'
+            })
+        
+        # Проверяем учётные данные через Django auth
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            # Успешная аутентификация - создаём сессию
+            login(request, user)
+            return redirect('dashboard')
+        else:
+            # Неверный логин или пароль
+            return render(request, 'auth/login.html', {
+                'error': 'Неверный логин или пароль. Попробуйте снова.',
+                'username': username  # Возвращаем введённый логин
+            })
+
+
+@login_required(login_url='login')
+def logout_view(request):
+    """
+    ENDPOINT: GET /logout/
+    ОПИСАНИЕ: Выход из системы
+    
+    ТРЕБУЕТ:
+      - Пользователь должен быть авторизован (@login_required)
+    
+    ЛОГИКА:
+      1. Разрушаем сессию пользователя
+      2. Перенаправляем на страницу входа
+    
+    ВОЗВРАЩАЕТ:
+      HttpResponseRedirect: Редирект на /login/
+    """
+    logout(request)
+    return redirect('login')
+
+
+# ==============================================================================
+# РАЗДЕЛ 4: ДАШБОРДЫ ДЛЯ РАЗНЫХ РОЛЕЙ
+# ==============================================================================
+
+@login_required(login_url='login')
 def dashboard(request):
     """
-    Панель управления (dashboard)
-    Зависит от роли пользователя:
-    - Администратор → admin.html
-    - Сотрудник → staff.html
-    - Родитель → parent.html
+    ENDPOINT: GET /dashboard/
+    ОПИСАНИЕ: Главный дашборд пользователя (версия зависит от роли)
+    
+    ТРЕБУЕТ:
+      - Пользователь должен быть авторизован
+    
+    РОЛЕВАЯ ЛОГИКА:
+      1. АДМИНИСТРАТОР (administrator):
+         - Видит статистику по всем пользователям
+         - Видит список всех пользователей системы
+         - Видит количество сообщений и активных сессий
+      
+      2. СОТРУДНИК (staff):
+         - Видит список назначенных студентов
+         - Видит непрочитанные сообщения
+         - Видит отчёты за текущий день
+         - Видит последние сообщения в чате
+      
+      3. РОДИТЕЛЬ (parent):
+         - Видит информацию о своём ребёнке
+         - Видит оценки (GPA), группу, специальность
+         - Видит непрочитанные сообщения от сотрудников
+         - Видит последние сообщения в чате
+      
+      4. ГОСТЬ (guest):
+         - Видит базовый дашборд родителя
+    
+    ПАРАМЕТРЫ:
+      request (HttpRequest): Объект запроса
+    
+    ПРИМЕРЫ КОНТЕКСТА (для админа):
+      {
+        'user': <User: admin>,
+        'role': 'administrator',
+        'users_count': 150,
+        'messages_count': 2340,
+        'active_sessions': 42,
+        'users': [<User: student1>, <User: staff1>, ...]
+      }
+    
+    ВОЗВРАЩАЕТ:
+      HttpResponse: Рендер соответствующего шаблона дашборда
     """
     
-    user = request.user  # Текущий пользователь
+    user = request.user
+    role = getattr(user, 'role', 'guest')
     
-    # Получить роль пользователя (из поля в профиле User)
-    # Примечание: поле role должно быть в модели User
-    role = getattr(user, 'role', 'guest')  # Если роли нет, роль = guest
+    # Базовый контекст для всех ролей
+    context = {'user': user, 'role': role}
     
-    # CONTEXT = словарь с данными для HTML шаблона
-    context = {
-        'user': user,  # Пользователь
-        'role': role,  # Его роль
-    }
-    
-    # ЛОГИКА ДЛЯ АДМИНИСТРАТОРА
+    # ⭐ ДАШБОРД АДМИНИСТРАТОРА
     if role == 'administrator':
-        # Получить статистику для админ-панели
         context.update({
-            'users_count': User.objects.count(),  # Всего пользователей
-            'messages_count': Message.objects.count(),  # Всего сообщений
-            'active_sessions': User.objects.filter(
-                last_login__isnull=False  # Те, кто хотя бы раз заходил
-            ).count(),
+            'users_count': User.objects.count(),
+            'messages_count': Message.objects.count(),
+            'active_sessions': User.objects.filter(last_login__isnull=False).count(),
             'users': User.objects.all()[:50],  # Первые 50 пользователей
         })
-        
-        # Показать админ-панель
         return render(request, 'dashboard/admin.html', context)
     
-    # ЛОГИКА ДЛЯ СОТРУДНИКА
+    # ⭐ ДАШБОРД СОТРУДНИКА
     elif role == 'staff':
-        # Получить данные сотрудника
         try:
             employee = Employee.objects.get(user=user)
         except Employee.DoesNotExist:
             employee = None
         
-        # Получить статистику
         context.update({
             'employee': employee,
-            'unread_messages': Message.objects.filter(
-                recipient=user,
-                is_read=False  # Непрочитанные сообщения
-            ).count(),
-            'assigned_students': Student.objects.filter(
-                advisor=employee  # Студенты под присмотром этого сотрудника
-            ).count() if employee else 0,
-            'pending_reports': Message.objects.filter(
-                sender=user,
-                created_at__gte=now()  # За последний день
-            ).count(),
+            'unread_messages': Message.objects.filter(recipient=user, is_read=False).count(),
+            'assigned_students': Student.objects.filter(advisor=employee).count() if employee else 0,
+            'pending_reports': Message.objects.filter(sender=user, created_at__date=now().date()).count(),
             'recent_messages': Message.objects.filter(
-                Q(sender=user) | Q(recipient=user)  # От пользователя или к нему
-            ).order_by('-created_at')[:5],  # Последние 5
+                Q(sender=user) | Q(recipient=user)
+            ).order_by('-created_at')[:5],
         })
-        
-        # Показать панель сотрудника
         return render(request, 'dashboard/staff.html', context)
     
-    # ЛОГИКА ДЛЯ РОДИТЕЛЯ
+    # ⭐ ДАШБОРД РОДИТЕЛЯ
     elif role == 'parent':
-        # Получить родителя
         try:
             parent = Parent.objects.get(user=user)
         except Parent.DoesNotExist:
             parent = None
         
-        # Получить студента (ребёнка)
         student = None
         if parent:
             try:
@@ -192,7 +249,6 @@ def dashboard(request):
             except Student.DoesNotExist:
                 student = None
         
-        # Получить статистику
         context.update({
             'parent': parent,
             'student_name': student.full_name if student else 'Не привязан',
@@ -200,58 +256,57 @@ def dashboard(request):
             'student_specialty': student.specialty if student else '-',
             'student_id': student.student_id if student else '-',
             'gpa': student.gpa if student else '-',
-            'unread_messages': Message.objects.filter(
-                recipient=user,
-                is_read=False
-            ).count(),
-            'recent_messages': Message.objects.filter(
-                recipient=user
-            ).order_by('-created_at')[:5],
+            'unread_messages': Message.objects.filter(recipient=user, is_read=False).count(),
+            'recent_messages': Message.objects.filter(recipient=user).order_by('-created_at')[:5],
         })
-        
-        # Показать панель родителя
         return render(request, 'dashboard/parent.html', context)
     
-    # ЕСЛИ РОЛЬ НЕ ОПРЕДЕЛЕНА
-    else:
-        # Показать стандартную панель
-        return render(request, 'dashboard/parent.html', context)
+    # ⭐ ДАШБОРД ДЛЯ ГОСТЕЙ
+    return render(request, 'dashboard/parent.html', context)
 
 
-# ===================== 5. ФУНКЦИЯ: СПИСОК СООБЩЕНИЙ =====================
-# Отображение интерфейса сообщений
+# ==============================================================================
+# РАЗДЕЛ 5: МОДУЛЬ СООБЩЕНИЙ
+# ==============================================================================
 
 @login_required(login_url='login')
 def messages_view(request):
     """
-    Страница сообщений
+    ENDPOINT: GET /messages/
+    ОПИСАНИЕ: Страница сообщений (список контактов)
     
-    Показывает:
-    - Список контактов (левая сторона)
-    - Чат с выбранным контактом (правая сторона)
+    ТРЕБУЕТ:
+      - Пользователь должен быть авторизован
+    
+    ЛОГИКА:
+      1. Получаем все контакты пользователя (с кем он переписывался)
+      2. Для каждого контакта считаем непрочитанные сообщения
+      3. Возвращаем список контактов с информацией о сообщениях
+    
+    ПАРАМЕТРЫ:
+      request (HttpRequest): Объект запроса
+    
+    ВОЗВРАЩАЕТ:
+      HttpResponse: Рендер шаблона messages/messages.html с контактами
     """
     
     user = request.user
-    
-    # Получить всех контактов (те, кто переписывался с пользователем)
-    # Объединяем тех, кто послал сообщение, и тех, кому пользователь писал
     contact_ids = set()
     
-    # От кого пришли сообщения
-    sent_messages = Message.objects.filter(recipient=user).values_list('sender_id', flat=True)
-    contact_ids.update(sent_messages)
+    # Получаем ID всех, кто отправлял сообщения этому пользователю
+    sent_to_me = Message.objects.filter(recipient=user).values_list('sender_id', flat=True)
+    contact_ids.update(sent_to_me)
     
-    # Кому пишет пользователь
-    received_messages = Message.objects.filter(sender=user).values_list('recipient_id', flat=True)
-    contact_ids.update(received_messages)
+    # Получаем ID всех, кому этот пользователь отправлял сообщения
+    sent_by_me = Message.objects.filter(sender=user).values_list('recipient_id', flat=True)
+    contact_ids.update(sent_by_me)
     
-    # Получить объекты контактов
+    # Получаем объекты User для этих контактов
     contacts = User.objects.filter(id__in=contact_ids)
     
-    # Подготовить данные о контактах
+    # Подготавливаем данные контактов
     contacts_data = []
     for contact in contacts:
-        # Подсчитать непрочитанные сообщения от этого контакта
         unread_count = Message.objects.filter(
             sender=contact,
             recipient=user,
@@ -264,140 +319,202 @@ def messages_view(request):
             'unread_count': unread_count,
         })
     
-    # Подготовить контекст
     context = {
         'user': user,
-        'contacts': contacts_data,
+        'contacts': contacts_data
     }
-    
-    # Показать страницу сообщений
     return render(request, 'messages/messages.html', context)
 
 
-# ===================== 6. API: ПОЛУЧИТЬ СООБЩЕНИЯ С КОНТАКТОМ =====================
-# AJAX запрос: загрузить сообщения с конкретным пользователем
-
 @login_required(login_url='login')
-@require_http_methods(["GET"])
 def api_messages(request):
     """
-    API endpoint для загрузки сообщений
+    ENDPOINT: GET /api/messages/
+    ОПИСАНИЕ: API для получения сообщений с конкретным контактом
     
-    Параметры:
-    - contact_id = ID контакта, с которым загружаем переписку
+    ТРЕБУЕТ:
+      - Пользователь должен быть авторизован
     
-    Возвращает: JSON с сообщениями
+    ПАРАМЕТРЫ QUERY:
+      contact_id (int): ID контакта (обязательное)
+    
+    ПРИМЕРЫ:
+      curl "http://localhost:8000/api/messages/?contact_id=5"
+    
+    ЛОГИКА:
+      1. Получаем ID контакта из параметров
+      2. Получаем все сообщения между пользователем и контактом
+      3. Отмечаем полученные сообщения как прочитанные
+      4. Возвращаем JSON со списком сообщений
+    
+    ВОЗВРАЩАЕТ:
+      JSON: {
+        "messages": [
+          {
+            "id": 1,
+            "sender_id": 2,
+            "sender_name": "Иван Петров",
+            "content": "Привет!",
+            "created_at": "2025-12-28 15:30:45",
+            "is_read": true
+          },
+          ...
+        ]
+      }
     """
     
-    user = request.user
     contact_id = request.GET.get('contact_id')
-    
-    # Проверить параметр
     if not contact_id:
-        return JsonResponse({'error': 'contact_id не указан'}, status=400)
+        return JsonResponse({'error': 'contact_id обязателен'}, status=400)
     
+    user = request.user
     try:
-        # Получить контакт
         contact = User.objects.get(id=contact_id)
     except User.DoesNotExist:
         return JsonResponse({'error': 'Контакт не найден'}, status=404)
     
-    # Получить все сообщения между пользователем и контактом
+    # Получаем все сообщения между пользователями
     messages = Message.objects.filter(
-        Q(sender=user, recipient=contact) |  # От пользователя к контакту
-        Q(sender=contact, recipient=user)     # От контакта к пользователю
+        Q(sender=user, recipient=contact) | Q(sender=contact, recipient=user)
     ).order_by('created_at')
     
-    # Отметить как прочитанные
-    Message.objects.filter(sender=contact, recipient=user, is_read=False).update(is_read=True)
+    # Отмечаем сообщения от контакта как прочитанные
+    Message.objects.filter(
+        sender=contact,
+        recipient=user,
+        is_read=False
+    ).update(is_read=True)
     
-    # Подготовить данные
-    messages_data = []
-    for msg in messages:
-        messages_data.append({
-            'id': msg.id,
-            'sender': msg.sender.get_full_name() or msg.sender.username,
-            'content': msg.content,
-            'time': msg.created_at.strftime('%d.%m.%Y %H:%M'),  # Формат даты
-            'is_outgoing': msg.sender == user,  # Это исходящее или входящее
-        })
+    # Форматируем сообщения для JSON
+    messages_data = [{
+        'id': msg.id,
+        'sender_id': msg.sender.id,
+        'sender_name': msg.sender.get_full_name() or msg.sender.username,
+        'content': msg.content,
+        'created_at': msg.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        'is_read': msg.is_read,
+    } for msg in messages]
     
-    # Ответить JSON
-    return JsonResponse({
-        'contact_name': contact.get_full_name() or contact.username,
-        'contact_role': getattr(contact, 'role', 'unknown'),
-        'messages': messages_data,
-    })
+    return JsonResponse({'messages': messages_data})
 
-
-# ===================== 7. API: ОТПРАВИТЬ СООБЩЕНИЕ =====================
-# AJAX запрос: отправить новое сообщение
 
 @login_required(login_url='login')
 @require_http_methods(["POST"])
 def api_send_message(request):
     """
-    API endpoint для отправки сообщения
+    ENDPOINT: POST /api/messages/send/
+    ОПИСАНИЕ: API для отправки сообщения
     
-    Параметры:
-    - recipient_id = кому отправляем
-    - content = текст сообщения
+    ТРЕБУЕТ:
+      - Пользователь должен быть авторизован
+      - Метод запроса: POST
     
-    Возвращает: JSON с результатом
+    ТЕЛО ЗАПРОСА (JSON):
+      {
+        "recipient_id": 5,
+        "content": "Привет, как дела?"
+      }
+    
+    ПРИМЕРЫ:
+      curl -X POST http://localhost:8000/api/messages/send/ \\
+        -H "Content-Type: application/json" \\
+        -d '{"recipient_id": 5, "content": "Привет!"}'
+    
+    ЛОГИКА:
+      1. Парсим JSON из тела запроса
+      2. Проверяем наличие обязательных полей
+      3. Находим получателя в БД
+      4. Создаём новое сообщение
+      5. Возвращаем JSON с информацией о созданном сообщении
+    
+    ВОЗВРАЩАЕТ (успех):
+      JSON 200: {
+        "success": true,
+        "message": {
+          "id": 42,
+          "sender_id": 1,
+          "sender_name": "Петров Иван",
+          "content": "Привет!",
+          "created_at": "2025-12-28 15:35:20"
+        }
+      }
+    
+    ВОЗВРАЩАЕТ (ошибка):
+      JSON 400: {"error": "recipient_id и content обязательны"}
+      JSON 404: {"error": "Получатель не найден"}
+      JSON 400: {"error": "Неверный JSON"}
     """
     
-    user = request.user
-    recipient_id = request.POST.get('recipient_id')
-    content = request.POST.get('content', '').strip()
-    
-    # Проверить параметры
-    if not recipient_id or not content:
-        return JsonResponse({'success': False, 'message': 'Заполните все поля'})
-    
     try:
-        # Получить получателя
+        # Парсим JSON из тела запроса
+        data = json.loads(request.body)
+        recipient_id = data.get('recipient_id')
+        content = data.get('content', '').strip()
+        
+        # Проверяем, что оба поля заполнены
+        if not recipient_id or not content:
+            return JsonResponse(
+                {'error': 'recipient_id и content обязательны'},
+                status=400
+            )
+        
+        # Получаем получателя из БД
         recipient = User.objects.get(id=recipient_id)
-    except User.DoesNotExist:
-        return JsonResponse({'success': False, 'message': 'Получатель не найден'})
-    
-    try:
-        # Создать новое сообщение
+        
+        # Создаём новое сообщение
         message = Message.objects.create(
-            sender=user,
+            sender=request.user,
             recipient=recipient,
             content=content
         )
         
-        # Вернуть успех
+        # Возвращаем информацию о созданном сообщении
         return JsonResponse({
             'success': True,
-            'message': 'Сообщение отправлено',
-            'message_id': message.id
+            'message': {
+                'id': message.id,
+                'sender_id': message.sender.id,
+                'sender_name': message.sender.get_full_name() or message.sender.username,
+                'content': message.content,
+                'created_at': message.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            }
         })
-    
+        
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'Получатель не найден'}, status=404)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Неверный JSON'}, status=400)
     except Exception as e:
-        # Если ошибка
-        return JsonResponse({
-            'success': False,
-            'message': f'Ошибка: {str(e)}'
-        })
+        return JsonResponse({'error': str(e)}, status=500)
 
 
-# ===================== 8. ФУНКЦИЯ: 404 (СТРАНИЦА НЕ НАЙДЕНА) =====================
-# Показать ошибку если пользователь зашёл на несуществующую страницу
+# ==============================================================================
+# РАЗДЕЛ 6: ОБРАБОТЧИКИ ОШИБОК
+# ==============================================================================
 
 def page_not_found(request, exception):
     """
-    Обработка ошибки 404
+    ОБРАБОТЧИК: 404 Not Found
+    ОПИСАНИЕ: Страница ошибки 404 (страница не найдена)
+    
+    КОГДА ВЫЗЫВАЕТСЯ:
+      - Пользователь обращается к несуществующему URL
+    
+    ВОЗВРАЩАЕТ:
+      HttpResponse: Рендер шаблона errors/404.html со статусом 404
     """
-    return render(request, '404.html', status=404)
+    return render(request, 'errors/404.html', status=404)
 
-
-# ===================== 9. ФУНКЦИЯ: 500 (ОШИБКА СЕРВЕРА) =====================
-# Показать ошибку если что-то сломалось на сервере
 
 def server_error(request):
     """
-    Обработка ошибки 500
+    ОБРАБОТЧИК: 500 Internal Server Error
+    ОПИСАНИЕ: Страница ошибки 500 (ошибка сервера)
+    
+    КОГДА ВЫЗЫВАЕТСЯ:
+      - На сервере произошла необработанная ошибка
+    
+    ВОЗВРАЩАЕТ:
+      HttpResponse: Рендер шаблона errors/500.html со статусом 500
     """
-    return render(request, '500.html', status=500)
+    return render(request, 'errors/500.html', status=500)
