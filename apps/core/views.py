@@ -31,7 +31,7 @@ from django.utils.timezone import now
 import json
 
 from apps.communications.models import User, Message
-
+from apps.students.models import Student
 from apps.employees.models import Employee
 from apps.parents.models import Parent
 
