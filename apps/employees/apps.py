@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ParentsConfig(AppConfig):
+class EmployeesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'parents'
+    name = 'apps.employees'
