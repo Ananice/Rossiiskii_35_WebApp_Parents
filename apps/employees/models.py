@@ -11,6 +11,7 @@ from django.db import models
 from django.core.validators import RegexValidator, URLValidator
 from django.utils import timezone
 from datetime import timedelta
+from django.conf import settings
 
 
 class Department(models.Model):
@@ -256,6 +257,15 @@ class Employee(models.Model):
         ('M', 'Мужской'),
         ('F', 'Женский'),
     ]
+
+    user = models.OneToOneField(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE,
+    related_name='employee_profile',
+    null=True,
+    blank=True,
+    help_text="Связь с учетной записью пользователя"
+    )
 
     # Личная информация
     first_name = models.CharField(

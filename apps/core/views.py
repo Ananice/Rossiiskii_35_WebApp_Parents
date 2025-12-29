@@ -30,10 +30,10 @@ from django.db.models import Q
 from django.utils.timezone import now
 import json
 
-from communications.models import User, Message
-from students.models import Student
-from employees.models import Employee
-from parents.models import Parent
+from apps.communications.models import User, Message
+from apps.students.models import Student
+from apps.employees.models import Employee
+from apps.parents.models import Parent
 
 
 # ==============================================================================

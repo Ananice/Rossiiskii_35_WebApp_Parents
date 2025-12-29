@@ -11,6 +11,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.utils import timezone
+from django.conf import settings
 
 
 class RelationType(models.Model):
@@ -81,6 +82,16 @@ class Parent(models.Model):
         ('INACTIVE', 'Неактивный'),
         ('DECEASED', 'Скончался'),
     ]
+    
+    user = models.OneToOneField(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE,
+    related_name='parent_profile',
+    null=True,
+    blank=True,
+    help_text="Связь с учетной записью пользователя"
+    )
+
 
     # ===== ЛИЧНАЯ ИНФОРМАЦИЯ =====
     # Имя родителя

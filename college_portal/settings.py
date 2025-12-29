@@ -39,11 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Наши приложения
-    'students.apps.StudentsConfig',
-    'parents.apps.ParentsConfig',
-    'employees.apps.EmployeesConfig',
-    'communications.apps.CommunicationsConfig',
-    'reports.apps.ReportsConfig',
+    'apps.students.apps.StudentsConfig',
+    'apps.parents.apps.ParentsConfig',
+    'apps.employees.apps.EmployeesConfig',
+    'apps.communications.apps.CommunicationsConfig',
+    'apps.reports.apps.ReportsConfig',
+    'apps.core.apps.CoreConfig',
     
     # Третьесторонние приложения
     'rest_framework',
