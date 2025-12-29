@@ -17,7 +17,7 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
-from communications.models import User, Message, Report
+from apps.communications.models import User, Message, Report
 
 
 class Command(BaseCommand):
