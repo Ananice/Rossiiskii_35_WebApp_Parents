@@ -40,84 +40,44 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from . import views
 
 
 # ==============================================================================
 # ОСНОВНЫЕ МАРШРУТЫ
 # ==============================================================================
+#
+# ВАЖНО:
+# - После рефакторинга проектный модуль college_portal НЕ хранит представления (views).
+# - Все пользовательские маршруты вынесены в приложение apps.core и подключаются через include().
+#
+# ПРЕИМУЩЕСТВА:
+# - Разделение ответственности (project urls = “шлюз”, app urls = “бизнес-логика”).
+# - Упрощение поддержки и расширения маршрутов.
+#
 
 urlpatterns = [
     # АДМИНПАНЕЛЬ DJANGO
+    # --------
+    # ENDPOINT: GET /admin/
+    # DESCRIPTION: Административная панель Django
+    # METHODS: GET
     path('admin/', admin.site.urls),
 
-    # ГЛАВНАЯ СТРАНИЦА
+    # МАРШРУТЫ ПРИЛОЖЕНИЯ (CORE)
     # --------
-    # ENDPOINT: GET /
-    # DESCRIPTION: Главная страница приложения
-    # METHODS: GET
-    # RESPONSE: редирект на /dashboard/ (если авторизован) или /login/ (если нет)
-    path('', views.index, name='index'),
-
-    # АУТЕНТИФИКАЦИЯ
-    # --------
-    # ENDPOINT: GET/POST /login/
-    # DESCRIPTION: Страница входа и обработка формы аутентификации
-    # METHODS: GET, POST
-    # GET RESPONSE: Рендер шаблона auth/login.html
-    # POST RESPONSE: редирект на /dashboard/ (если ок, или обратно в login.html с ошибкой)
-    path('login/', views.login_view, name='login'),
-
-    # ENDPOINT: GET /logout/
-    # DESCRIPTION: Выход из системы и разрушение сессии
-    # METHODS: GET
-    # RESPONSE: редирект на /login/
-    # REQUIRES: Должен быть авторизован (если нет - редирект на /login/)
-    path('logout/', views.logout_view, name='logout'),
-
-    # ДАШБОРД
-    # --------
-    # ENDPOINT: GET /dashboard/
-    # DESCRIPTION: Основной дашборд с персонализированным контентом в зависимости от роли
-    # METHODS: GET
-    # RESPONSE:
-    #   - Роль = 'administrator' → рендер dashboard/admin.html (админ-панель)
-    #   - Роль = 'staff' → рендер dashboard/staff.html (дашборд сотрудника)
-    #   - Роль = 'parent' → рендер dashboard/parent.html (дашборд родителя)
-    # REQUIRES: Должен быть авторизован (если нет - редирект на /login/)
-    path('dashboard/', views.dashboard, name='dashboard'),
-
-    # МОДУЛЬ СООБЩЕНИЙ
-    # --------
-    # ENDPOINT: GET /messages/
-    # DESCRIPTION: Основная страница со списком контактов с динамическим подсчётом непрочитанных сообщений
-    # METHODS: GET
-    # RESPONSE: рендер messages/messages.html с контактами
-    # REQUIRES: Должен быть авторизован
-    path('messages/', views.messages_view, name='messages'),
-
-    # API ENDPOINTS
-    # --------
-    # ENDPOINT: GET /api/messages/
-    # DESCRIPTION: JSON API для получения сообщений между конкретным пользователем
-    # METHODS: GET
-    # QUERY PARAMS: contact_id (int) - ID контакта
-    # RESPONSE: JSON со списком сообщений или ошибка
-    # EXAMPLE: curl "http://localhost:8000/api/messages/?contact_id=5"
-    # REQUIRES: Должен быть авторизован
-    path('api/messages/', views.api_messages, name='api_messages'),
-
-    # ENDPOINT: POST /api/messages/send/
-    # DESCRIPTION: JSON API для отправки нового сообщения
-    # METHODS: POST
-    # REQUEST BODY (JSON): {"recipient_id": <int>, "content": "<string>"}
-    # RESPONSE: JSON с инфо о созданном сообщении
-    # EXAMPLE: curl -X POST http://localhost:8000/api/messages/send/ \
-    #               -H "Content-Type: application/json" \
-    #               -d '{"recipient_id": 5, "content": "Hello!"}'
-    # REQUIRES: Должен быть авторизован
-    path('api/messages/send/', views.api_send_message, name='api_send_message'),
+    # ENDPOINTS:
+    #   - GET / → index()
+    #   - GET/POST /login/ → login_view()
+    #   - GET /logout/ → logout_view()
+    #   - GET /dashboard/ → dashboard()
+    #   - GET /messages/ → messages_view()
+    #   - GET /api/messages/ → api_messages()
+    #   - POST /api/messages/send/ → api_send_message()
+    # DESCRIPTION: Подключение маршрутов приложения apps.core
+    # NOTE: Детальная маршрутизация находится в apps/core/urls.py
+    path('', include('apps.core.urls')),
 ]
+
 
 # ==============================================================================
 # СТАТИЧЕСКИЕ МЕДИА ФАЙЛЫ (ДЛЯ DEBUG=True)
@@ -134,10 +94,10 @@ if settings.DEBUG:
 # ==============================================================================
 
 # 404 - Страница не найдена
-handler404 = 'college_portal.views.page_not_found'
+handler404 = 'apps.core.views.page_not_found'
 
 # 500 - Ошибка сервера
-handler500 = 'college_portal.views.server_error'
+handler500 = 'apps.core.views.server_error'
 
 # ==============================================================================
 # НОМЕНКЛАТУРА ГОТОВЫМ К ПОДКЛЮЧЕНИЮ (РАСКОММЕНТИРОВАТЬ):

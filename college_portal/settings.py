@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'apps.employees.apps.EmployeesConfig',
     'apps.communications.apps.CommunicationsConfig',
     'apps.reports.apps.ReportsConfig',
+    'apps.core.apps.CoreConfig',
     
     # Третьесторонние приложения
     'rest_framework',
