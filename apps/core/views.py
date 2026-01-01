@@ -56,8 +56,8 @@ def index(request):
       HttpResponseRedirect: Редирект на dashboard или login
     """
     if request.user.is_authenticated:
-        return redirect('dashboard')
-    return redirect('login')
+        return redirect('core:dashboard')
+    return redirect('core:login')
 
 
 # ==============================================================================
@@ -99,7 +99,7 @@ def login_view(request):
     if request.method == 'GET':
         # Если уже авторизован, перенаправляем на дашборд
         if request.user.is_authenticated:
-            return redirect('dashboard')
+            return redirect('core:dashboard')
         # Показываем форму входа
         return render(request, 'auth/login.html')
     
@@ -121,7 +121,7 @@ def login_view(request):
         if user is not None:
             # Успешная аутентификация - создаём сессию
             login(request, user)
-            return redirect('dashboard')
+            return redirect('core:dashboard')
         else:
             # Неверный логин или пароль
             return render(request, 'auth/login.html', {
@@ -130,7 +130,7 @@ def login_view(request):
             })
 
 
-@login_required(login_url='login')
+@login_required(login_url='core:login')
 def logout_view(request):
     """
     ENDPOINT: GET /logout/
@@ -147,14 +147,14 @@ def logout_view(request):
       HttpResponseRedirect: Редирект на /login/
     """
     logout(request)
-    return redirect('login')
+    return redirect('core:login')
 
 
 # ==============================================================================
 # РАЗДЕЛ 4: ДАШБОРДЫ ДЛЯ РАЗНЫХ РОЛЕЙ
 # ==============================================================================
 
-@login_required(login_url='login')
+@login_required(login_url='core:login')
 def dashboard(request):
     """
     ENDPOINT: GET /dashboard/
@@ -269,7 +269,7 @@ def dashboard(request):
 # РАЗДЕЛ 5: МОДУЛЬ СООБЩЕНИЙ
 # ==============================================================================
 
-@login_required(login_url='login')
+@login_required(login_url='core:login')
 def messages_view(request):
     """
     ENDPOINT: GET /messages/
@@ -326,7 +326,7 @@ def messages_view(request):
     return render(request, 'messages/messages.html', context)
 
 
-@login_required(login_url='login')
+@login_required(login_url='core:login')
 def api_messages(request):
     """
     ENDPOINT: GET /api/messages/
@@ -398,7 +398,7 @@ def api_messages(request):
     return JsonResponse({'messages': messages_data})
 
 
-@login_required(login_url='login')
+@login_required(login_url='core:login')
 @require_http_methods(["POST"])
 def api_send_message(request):
     """

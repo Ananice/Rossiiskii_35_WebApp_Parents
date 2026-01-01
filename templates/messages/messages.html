@@ -1,0 +1,42 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Сообщения{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header bg-light">
+        <strong>Контакты</strong>
+      </div>
+      <div class="list-group list-group-flush">
+        {% for c in contacts %}
+          <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+             data-contact-id="{{ c.id }}">
+            <span>{{ c.name }}</span>
+            {% if c.unread_count %}
+              <span class="badge bg-primary rounded-pill">{{ c.unread_count }}</span>
+            {% endif %}
+          </a>
+        {% empty %}
+          <div class="list-group-item text-muted">Пока нет переписок.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header bg-light">
+        <strong>Диалог</strong>
+      </div>
+      <div class="card-body">
+        <p class="text-muted mb-0">
+          Выберите контакт слева. (API загрузки сообщений можно подключить позже.)
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
