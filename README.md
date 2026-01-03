@@ -49,7 +49,14 @@
    python manage.py migrate
    ```
 
-5. Запустить сервер:
+5. Создать демо-аккаунты: admin1, staff1, parent1
+   ```powershell
+   python manage.py create_demo_users
+   ```
+- Демо-аккаунты: `admin1`, `staff1`, `parent1`
+- Пароль: `Admin12345!`
+
+6. Запустить сервер:
    ```powershell
    python manage.py runserver
    ```

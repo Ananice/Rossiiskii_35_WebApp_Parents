@@ -31,12 +31,9 @@
                 <div class="card-body p-4">
                     
                     <!-- ОШИБКИ ВХОДА (если логин/пароль неправильные) -->
-                    {% if form.non_field_errors %}
+                    {% if error %}
                         <div class="alert alert-danger">
-                            <strong>❌ Ошибка входа:</strong>
-                            {% for error in form.non_field_errors %}
-                                <div>{{ error }}</div>
-                            {% endfor %}
+                            <strong>❌ Ошибка входа:</strong> {{ error }}
                         </div>
                     {% endif %}
 
@@ -58,23 +55,13 @@
                             
                             <input 
                                 type="text" 
-                                class="form-control {% if form.username.errors %}is-invalid{% endif %}"
-                                <!-- is-invalid = красная граница, если ошибка -->
-                                
-                                id="id_username"
-                                name="username"
-                                placeholder="Введите логин"
-                                required
-                                value="{{ form.username.value|default:'' }}"
+                                class="form-control"
+								id="id_username"
+								name="username"
+								placeholder="Введите логин"
+								required
+								value="{{ username|default:'' }}"
                             >
-                            
-                            <!-- СООБЩЕНИЕ ОБ ОШИБКЕ (если есть) -->
-                            {% if form.username.errors %}
-                                <div class="invalid-feedback d-block">
-                                    <!-- d-block = показать ошибку -->
-                                    {{ form.username.errors.0 }}
-                                </div>
-                            {% endif %}
                         </div>
 
                         <!-- ================== ПОЛЕ ПАРОЛЯ ================== -->
@@ -85,18 +72,12 @@
                             
                             <input 
                                 type="password" 
-                                class="form-control {% if form.password.errors %}is-invalid{% endif %}"
+                                class="form-control"
                                 id="id_password"
                                 name="password"
                                 placeholder="Введите пароль"
                                 required
                             >
-                            
-                            {% if form.password.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {{ form.password.errors.0 }}
-                                </div>
-                            {% endif %}
                         </div>
 
                         <!-- ================== СПРАВКА О РОЛЯХ ================== -->
