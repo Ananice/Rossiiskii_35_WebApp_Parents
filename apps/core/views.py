@@ -208,7 +208,7 @@ def dashboard(request):
     context = {'user': user, 'role': role}
     
     # ⭐ ДАШБОРД АДМИНИСТРАТОРА
-    if role == 'administrator':
+    if role == 'admin':
         context.update({
             'users_count': User.objects.count(),
             'messages_count': Message.objects.count(),
@@ -218,7 +218,7 @@ def dashboard(request):
         return render(request, 'dashboard/admin.html', context)
     
     # ⭐ ДАШБОРД СОТРУДНИКА
-    elif role == 'staff':
+    elif role == 'employee':
         try:
             employee = Employee.objects.get(user=user)
         except Employee.DoesNotExist:
@@ -319,9 +319,28 @@ def messages_view(request):
             'unread_count': unread_count,
         })
     
+    # Доступные контакты для старта диалога (даже если переписки ещё нет)
+    role = getattr(user, 'role', '')
+    if role == 'employee':
+        qs = User.objects.filter(role='parent', is_active=True)
+    elif role == 'parent':
+        qs = User.objects.filter(role='employee', is_active=True)
+    elif role == 'admin':
+        qs = User.objects.filter(is_active=True)
+    else:
+        qs = User.objects.none()
+
+    qs = qs.exclude(id=user.id)
+
+    available_contacts = [{
+        'id': u.id,
+        'name': u.get_full_name() or u.username,
+    } for u in qs.order_by('last_name', 'first_name', 'username')]
+
     context = {
         'user': user,
-        'contacts': contacts_data
+        'contacts': contacts_data,
+        'available_contacts': available_contacts,
     }
     return render(request, 'messages/messages.html', context)
 
@@ -363,16 +382,22 @@ def api_messages(request):
       }
     """
     
-    contact_id = request.GET.get('contact_id')
-    if not contact_id:
+    contact_id_raw = request.GET.get('contact_id') or request.GET.get('contactid')
+    if not contact_id_raw:
         return JsonResponse({'error': 'contact_id обязателен'}, status=400)
-    
-    user = request.user
+
+    try:
+        contact_id = int(contact_id_raw)
+    except (TypeError, ValueError):
+        return JsonResponse({'error': 'contact_id должен быть числом'}, status=400)
+
+    user = request.user  # <-- важно: объявляем ДО любого использования
+
     try:
         contact = User.objects.get(id=contact_id)
     except User.DoesNotExist:
         return JsonResponse({'error': 'Контакт не найден'}, status=404)
-    
+  
     # Получаем все сообщения между пользователями
     messages = Message.objects.filter(
         Q(sender=user, recipient=contact) | Q(sender=contact, recipient=user)
@@ -444,19 +469,23 @@ def api_send_message(request):
       JSON 404: {"error": "Получатель не найден"}
       JSON 400: {"error": "Неверный JSON"}
     """
-    
+
     try:
         # Парсим JSON из тела запроса
         data = json.loads(request.body)
-        recipient_id = data.get('recipient_id')
-        content = data.get('content', '').strip()
-        
+
+        recipient_id_raw = data.get('recipient_id') or data.get('recipientid')
+        subject = (data.get('subject') or 'Чат').strip()
+        content = (data.get('content') or '').strip()
+
+        try:
+            recipient_id = int(recipient_id_raw)
+        except (TypeError, ValueError):
+            return JsonResponse({'error': 'recipient_id должен быть числом'}, status=400)
+            
         # Проверяем, что оба поля заполнены
-        if not recipient_id or not content:
-            return JsonResponse(
-                {'error': 'recipient_id и content обязательны'},
-                status=400
-            )
+        if not content:
+            return JsonResponse({'error': 'content обязателен'}, status=400)
         
         # Получаем получателя из БД
         recipient = User.objects.get(id=recipient_id)
@@ -465,6 +494,7 @@ def api_send_message(request):
         message = Message.objects.create(
             sender=request.user,
             recipient=recipient,
+            subject=subject,
             content=content
         )
         
