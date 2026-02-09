@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "apps.communications.apps.CommunicationsConfig",
     "apps.reports.apps.ReportsConfig",
     "apps.core.apps.CoreConfig",
+    "apps.public.apps.PublicConfig",
 
     # Третьесторонние приложения
     "rest_framework",
@@ -102,7 +103,7 @@ DATABASES = {
     "default": dj_database_url.config(
         default=os.getenv("DATABASE_URL"),
         conn_max_age=600,
-        ssl_require=True
+        ssl_require=("RENDER" in os.environ),
     )
 }
 

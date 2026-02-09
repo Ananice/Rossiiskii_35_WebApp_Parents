@@ -1,0 +1,22 @@
+{% extends "public/base_public.html" %}
+{% block public_content %}
+<h1>Новости</h1>
+
+{% if items %}
+  <div class="list-group">
+    {% for n in items %}
+      <div class="list-group-item">
+        <div class="d-flex justify-content-between">
+          <h5 class="mb-1">{{ n.title }}</h5>
+          <small class="text-muted">{{ n.published_at|date:"d.m.Y H:i" }}</small>
+        </div>
+        {% if n.summary %}<p class="mb-1">{{ n.summary }}</p>{% endif %}
+        {% if n.body %}<small class="text-muted">{{ n.body }}</small>{% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="mb-0 text-muted">Новостей пока нет.</p>
+{% endif %}
+
+{% endblock %}

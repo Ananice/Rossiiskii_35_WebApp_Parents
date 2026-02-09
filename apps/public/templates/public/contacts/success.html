@@ -1,0 +1,6 @@
+{% extends "public/base_public.html" %}
+{% block public_content %}
+<h1>Обращение отправлено</h1>
+<p class="mb-2">Номер обращения: <b>{{ public_id }}</b></p>
+<p class="mb-0"><a href="{% url 'public:contacts' %}">Отправить ещё одно обращение</a></p>
+{% endblock %}

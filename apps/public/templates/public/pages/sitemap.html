@@ -1,0 +1,17 @@
+{% extends "public/base_public.html" %}
+{% block public_content %}
+<h1>Карта сайта</h1>
+<ul class="mb-0">
+  <li><a href="{% url 'public:index' %}">Главная</a></li>
+  <li><a href="{% url 'public:about' %}">О проекте</a></li>
+  <li><a href="{% url 'public:features' %}">Возможности</a></li>
+  <li><a href="{% url 'public:roles' %}">Роли</a></li>
+  <li><a href="{% url 'public:security' %}">Безопасность</a></li>
+  <li><a href="{% url 'public:docs' %}">Документация</a></li>
+  <li><a href="{% url 'public:faq' %}">FAQ</a></li>
+  <li><a href="{% url 'public:news' %}">Новости</a></li>
+  <li><a href="{% url 'public:contacts' %}">Обратная связь</a></li>
+  <li><a href="{% url 'public:privacy' %}">Политика ПДн</a></li>
+  <li><a href="{% url 'public:terms' %}">Соглашение</a></li>
+</ul>
+{% endblock %}

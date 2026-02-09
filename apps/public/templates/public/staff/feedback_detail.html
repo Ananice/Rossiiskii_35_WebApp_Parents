@@ -1,0 +1,32 @@
+{% extends "public/base_public.html" %}
+{% block public_content %}
+<h1>Обращение {{ fb.public_id }}</h1>
+
+<div class="mb-3">
+  <div><b>ФИО:</b> {{ fb.name }}</div>
+  <div><b>Email:</b> {{ fb.email }}</div>
+  <div><b>Телефон:</b> {{ fb.phone }}</div>
+  <div><b>Тема:</b> {{ fb.subject }}</div>
+  <div><b>Статус:</b> {{ fb.get_status_display }}</div>
+  <div><b>Создано:</b> {{ fb.created_at|date:"d.m.Y H:i" }}</div>
+</div>
+
+<div class="mb-3">
+  <b>Сообщение:</b>
+  <pre class="p-3 bg-light border rounded">{{ fb.message }}</pre>
+</div>
+
+{% if fb.file_data %}
+  <div class="mb-0">
+    <b>Вложение:</b> {{ fb.file_name }} ({{ fb.file_size }} байт)
+    <div class="mt-2">
+      <a class="btn btn-success btn-sm" href="{% url 'public:staff_feedback_attachment' fb.public_id %}">
+        Скачать
+      </a>
+    </div>
+  </div>
+{% else %}
+  <p class="mb-0 text-muted">Вложений нет.</p>
+{% endif %}
+
+{% endblock %}

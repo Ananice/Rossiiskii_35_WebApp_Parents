@@ -61,8 +61,9 @@ urlpatterns = [
     # ENDPOINT: GET /admin/
     # DESCRIPTION: Административная панель Django
     # METHODS: GET
-    path('admin/', admin.site.urls),
-
+    path("admin/", admin.site.urls),
+    
+    path("", include("apps.public.urls")),
     # МАРШРУТЫ ПРИЛОЖЕНИЯ (CORE)
     # --------
     # ENDPOINTS:
@@ -75,7 +76,7 @@ urlpatterns = [
     #   - POST /api/messages/send/ → api_send_message()
     # DESCRIPTION: Подключение маршрутов приложения apps.core
     # NOTE: Детальная маршрутизация находится в apps/core/urls.py
-    path('', include('apps.core.urls')),
+    path("", include("apps.core.urls")),
 ]
 
 

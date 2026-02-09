@@ -1,0 +1,34 @@
+{% extends "public/base_public.html" %}
+{% block public_content %}
+<h1>Обращения (staff)</h1>
+
+{% if items %}
+  <div class="table-responsive">
+    <table class="table table-sm align-middle">
+      <thead>
+        <tr>
+          <th>Номер</th>
+          <th>ФИО</th>
+          <th>Тема</th>
+          <th>Создано</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fb in items %}
+        <tr>
+          <td>{{ fb.public_id }}</td>
+          <td>{{ fb.name }}</td>
+          <td>{{ fb.subject }}</td>
+          <td>{{ fb.created_at|date:"d.m.Y H:i" }}</td>
+          <td><a class="btn btn-outline-primary btn-sm" href="{% url 'public:staff_feedback_detail' fb.public_id %}">Открыть</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <p class="mb-0 text-muted">Обращений пока нет.</p>
+{% endif %}
+
+{% endblock %}
