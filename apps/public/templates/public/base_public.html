@@ -26,7 +26,7 @@
         <li class="nav-item"><a class="nav-link" href="{% url 'public:sitemap' %}">Карта сайта</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'public:contacts' %}">Обратная связь</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'core:login' %}">Вход</a></li>
-		{% if user.is_authenticated and user.role in ("admin", "employee") %}
+		{% if user.is_authenticated and user.role == "admin" or user.role == "employee" %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'public:staff_feedback_list' %}">Обращения (staff)</a>
           </li>
