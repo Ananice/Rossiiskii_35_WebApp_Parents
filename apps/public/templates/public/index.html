@@ -1,5 +1,10 @@
+{# apps/public/templates/public/index.html #}
 {% extends "public/base_public.html" %}
+
+{% block title %}Главная{% endblock %}
+
 {% block public_content %}
-<h1 class="mb-2">Публичная главная</h1>
-<p class="text-muted mb-0">Добро пожаловать на публичную часть портала.</p>
+<h1>Портал взаимодействия</h1>
+<p>Учебный проект: веб‑приложение для взаимодействия сотрудников колледжа с родителями обучающихся.</p>
+<p><a href="{% url 'public:about' %}">О проекте</a></p>
 {% endblock %}
