@@ -64,14 +64,14 @@
                         
                         <!-- ССЫЛКА НА ПАНЕЛЬ УПРАВЛЕНИЯ -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'core:dashboard' %}">...</a>
+                            <a class="nav-link" href="{% url 'core:dashboard' %}">
                                 <i class="fas fa-tachometer-alt"></i> Панель
                             </a>
                         </li>
                         
                         <!-- ССЫЛКА НА СООБЩЕНИЯ -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'core:messages' %}">...</a>
+                            <a class="nav-link" href="{% url 'core:messages' %}">
                                 <i class="fas fa-envelope"></i> Сообщения
                             </a>
                         </li>
@@ -79,7 +79,7 @@
                         <!-- АДМИН-ПАНЕЛЬ (ТОЛЬКО ДЛЯ АДМИНИСТРАТОРОВ) -->
                         {% if user.role == 'administrator' %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'admin:index' %}">...</a>
+                                <a class="nav-link" href="{% url 'admin:index' %}">
                                     <i class="fas fa-cog"></i> Админ
                                 </a>
                             </li>
@@ -87,7 +87,7 @@
                         
                         <!-- КНОПКА ВЫХОДА -->
                         <li class="nav-item">
-                            <a class="nav-link text-danger" href="{% url 'core:logout' %}">...</a>
+                            <a class="nav-link text-danger" href="{% url 'core:logout' %}">
                                 <i class="fas fa-sign-out-alt"></i> Выход
                             </a>
                         </li>
@@ -95,7 +95,7 @@
                     <!-- ЕСЛИ ПОЛЬЗОВАТЕЛЬ НЕ АВТОРИЗОВАН (не вошёл) -->
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'core:login' %}">...</a>
+                            <a class="nav-link" href="{% url 'core:login' %}">
                                 <i class="fas fa-sign-in-alt"></i> Вход
                             </a>
                         </li>
