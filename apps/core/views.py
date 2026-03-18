@@ -215,6 +215,11 @@ def dashboard(request):
             'active_sessions': User.objects.filter(last_login__isnull=False).count(),
             'users': User.objects.all()[:50],  # Первые 50 пользователей
         })
+        context['breadcrumbs'] = [
+            {'title': 'Главная', 'url': '/', 'icon': 'fas fa-home'},
+            {'title': 'Панель управления', 'url': None, 'icon': 'fas fa-tachometer-alt'},
+        ]
+
         return render(request, 'dashboard/admin.html', context)
     
     # ⭐ ДАШБОРД СОТРУДНИКА
@@ -233,6 +238,11 @@ def dashboard(request):
                 Q(sender=user) | Q(recipient=user)
             ).order_by('-created_at')[:5],
         })
+        context['breadcrumbs'] = [
+            {'title': 'Главная', 'url': '/', 'icon': 'fas fa-home'},
+            {'title': 'Панель управления', 'url': None, 'icon': 'fas fa-tachometer-alt'},
+        ]
+        
         return render(request, 'dashboard/staff.html', context)
     
     # ⭐ ДАШБОРД РОДИТЕЛЯ
@@ -259,9 +269,18 @@ def dashboard(request):
             'unread_messages': Message.objects.filter(recipient=user, is_read=False).count(),
             'recent_messages': Message.objects.filter(recipient=user).order_by('-created_at')[:5],
         })
+        context['breadcrumbs'] = [
+            {'title': 'Главная', 'url': '/', 'icon': 'fas fa-home'},
+            {'title': 'Панель управления', 'url': None, 'icon': 'fas fa-tachometer-alt'},
+        ]
+        
         return render(request, 'dashboard/parent.html', context)
     
     # ⭐ ДАШБОРД ДЛЯ ГОСТЕЙ
+        context['breadcrumbs'] = [
+            {'title': 'Главная', 'url': '/', 'icon': 'fas fa-home'},
+            {'title': 'Панель управления', 'url': None, 'icon': 'fas fa-tachometer-alt'},
+        ]
     return render(request, 'dashboard/parent.html', context)
 
 
@@ -342,6 +361,10 @@ def messages_view(request):
         'contacts': contacts_data,
         'available_contacts': available_contacts,
     }
+    context['breadcrumbs'] = [
+    {'title': 'Главная', 'url': '/', 'icon': 'fas fa-home'},
+    {'title': 'Сообщения', 'url': None, 'icon': 'fas fa-envelope'},
+    ]
     return render(request, 'messages/messages.html', context)
 
 

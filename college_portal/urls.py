@@ -77,6 +77,9 @@ urlpatterns = [
     # DESCRIPTION: Подключение маршрутов приложения apps.core
     # NOTE: Детальная маршрутизация находится в apps/core/urls.py
     path("", include("apps.core.urls")),
+    path("reports/", include("apps.reports.urls")),
+    path("parents/", include("apps.parents.urls")),
+    path("", include("apps.employees.urls")),
 ]
 
 
@@ -105,7 +108,4 @@ handler500 = 'apps.core.views.server_error'
 # ==============================================================================
 
 # urlpatterns += [path('students/', include('students.urls'))]
-# urlpatterns += [path('parents/', include('parents.urls'))]
-# urlpatterns += [path('employees/', include('employees.urls'))]
 # urlpatterns += [path('communications/', include('communications.urls'))]
-# urlpatterns += [path('reports/', include('reports.urls'))]

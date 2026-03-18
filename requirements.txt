@@ -9,3 +9,4 @@ Pillow==11.0.0
 gunicorn
 whitenoise
 dj-database-url
+openpyxl>=3.1.2
