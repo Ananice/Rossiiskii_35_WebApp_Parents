@@ -233,7 +233,7 @@ class ParentStudentRelationListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         """Получает queryset с поиском и фильтрацией."""
         queryset = ParentStudentRelation.objects.all().select_related(
-            'parent', 'relation_type'
+            'parent', 'relation_type', 'student'
         ).order_by('-start_date')
         
         # Поиск по ФИО родителя или ID студента
@@ -242,7 +242,7 @@ class ParentStudentRelationListView(LoginRequiredMixin, ListView):
             queryset = queryset.filter(
                 Q(parent__first_name__icontains=search) |
                 Q(parent__last_name__icontains=search) |
-                Q(student_id__icontains=search)
+                Q(student__full_name__icontains=search)
             )
         
         # Фильтр по активности
@@ -291,7 +291,7 @@ class ParentStudentRelationCreateView(LoginRequiredMixin, CreateView):
         messages.success(
             self.request,
             f'Связь создана: {form.instance.parent.get_full_name()} '
-            f'({form.instance.relation_type.name}) - студент {form.instance.student_id}'
+            f'({form.instance.relation_type.name}) - {form.instance.student.full_name}'
         )
         return response
     
@@ -339,6 +339,6 @@ class ParentStudentRelationDeleteView(LoginRequiredMixin, DeleteView):
         parent_name = self.object.parent.get_full_name()
         messages.success(
             request,
-            f'Связь {parent_name} - студент {self.object.student_id} удалена.'
+            f'Связь {parent_name} - {self.object.student.full_name} удалена.'
         )
         return super().delete(request, *args, **kwargs)
