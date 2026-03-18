@@ -1,0 +1,112 @@
+{% extends "base/base.html" %}
+{% block title %}{{ employee.get_full_name }} — МУИВ Портал{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-user-tie text-primary"></i> {{ employee.get_full_name }}</h2>
+    <div class="d-flex gap-2">
+        <a href="{% url 'employees:employee_update' employee.pk %}" class="btn btn-outline-primary">
+            <i class="fas fa-edit"></i> Редактировать
+        </a>
+        <a href="{% url 'employees:employee_schedule' employee.pk %}" class="btn btn-outline-info">
+            <i class="fas fa-calendar-alt"></i> Расписание
+        </a>
+        <a href="{% url 'employees:employee_list' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Назад
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+
+    <!-- Личные данные -->
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-id-badge"></i> Личные данные
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless mb-0">
+                    <tr><th style="width:40%">Табельный №:</th><td><code>{{ employee.employee_id }}</code></td></tr>
+                    <tr><th>Должность:</th><td>{{ employee.position.name|default:"—" }}</td></tr>
+                    <tr><th>Отдел:</th><td>{{ employee.department.name|default:"—" }}</td></tr>
+                    <tr><th>Статус:</th><td>
+                        {% if employee.status == 'ACTIVE' %}
+                            <span class="badge bg-success">Активен</span>
+                        {% else %}
+                            <span class="badge bg-danger">{{ employee.status }}</span>
+                        {% endif %}
+                    </td></tr>
+                    <tr><th>Стаж:</th><td>{{ years_of_service }} лет</td></tr>
+                    <tr><th>Возраст:</th><td>{{ age }} лет</td></tr>
+                    <tr><th>Дата приёма:</th><td>{{ employee.hire_date|date:"d.m.Y"|default:"—" }}</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Контактные данные -->
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-success text-white">
+                <i class="fas fa-phone-alt"></i> Контактные данные
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless mb-0">
+                    <tr><th style="width:40%">Email:</th><td>{{ employee.email|default:"—" }}</td></tr>
+                    <tr><th>Телефон:</th><td>{{ employee.phone|default:"—" }}</td></tr>
+                    <tr><th>Контактное лицо:</th><td>
+                        {% if employee.is_contact_person %}
+                            <span class="badge bg-primary">Да</span>
+                        {% else %}
+                            <span class="text-muted">Нет</span>
+                        {% endif %}
+                    </td></tr>
+                    <tr><th>Доступен:</th><td>
+                        {% if is_available %}
+                            <span class="badge bg-success"><i class="fas fa-circle"></i> Да</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Нет</span>
+                        {% endif %}
+                    </td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Квалификации -->
+    {% if employee.qualifications.exists %}
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <i class="fas fa-certificate"></i> Квалификации
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for qual in employee.qualifications.all %}
+                    <li class="list-group-item">{{ qual.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Расписание -->
+    {% if schedule %}
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <i class="fas fa-clock"></i> Расписание работы
+            </div>
+            <div class="card-body">
+                <p class="mb-1"><strong>Рабочие дни:</strong> {{ schedule.work_days|default:"—" }}</p>
+                <p class="mb-1"><strong>Часы работы:</strong> {{ schedule.start_time|default:"—" }} — {{ schedule.end_time|default:"—" }}</p>
+                <p class="mb-0"><strong>Консультации:</strong> {{ schedule.consultation_hours|default:"Не указаны" }}</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -105,30 +105,173 @@
         </div>
     </nav>
 
-    <!-- ===================== ОСНОВНОЙ КОНТЕНТ (MAIN) ===================== -->
-    <!-- Это место, где будут выводиться разные страницы (login, dashboard и т.д.) -->
-    <main class="flex-grow-1"> <!-- flex-grow-1 = займи весь свободный размер -->
-        <div class="container-fluid py-4"> <!-- py-4 = отступы сверху и снизу -->
-            
-            <!-- СИСТЕМА СООБЩЕНИЙ (ошибки, успехи, информация) -->
-            <!-- Это автоматические уведомления от Django -->
-            {% if messages %}
-                {% for message in messages %}
-                    <!-- Показываем сообщение с цветом в зависимости от типа -->
-                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                        {{ message }} <!-- Текст сообщения -->
-                        <!-- Кнопка "закрыть" -->
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
+    <!-- ===================== ОСНОВНОЙ КОНТЕНТ С САЙДБАРОМ ===================== -->
+    <div class="d-flex flex-grow-1">
 
-            <!-- СОДЕРЖИМОЕ КОНКРЕТНОЙ СТРАНИЦЫ -->
-            <!-- Контент конкретной страницы будет подставляться ниже -->
-            {% block content %}{% endblock %}
-        </div>
-    </main>
+        <!-- БОКОВОЕ МЕНЮ (только для авторизованных) -->
+        {% if user.is_authenticated %}
+        <nav class="sidebar bg-dark text-white d-flex flex-column p-3" style="min-width:220px; min-height:calc(100vh - 56px);">
 
+            <p class="text-uppercase text-muted small mb-2 px-1">Навигация</p>
+            <ul class="nav flex-column gap-1 mb-3">
+                <li class="nav-item">
+                    <a class="nav-link text-white {% if request.path == '/dashboard/' %}active bg-primary rounded{% endif %}"
+                       href="{% url 'core:dashboard' %}">
+                        <i class="fas fa-tachometer-alt me-2"></i>Панель управления
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white {% if '/messages/' in request.path %}active bg-primary rounded{% endif %}"
+                       href="{% url 'core:messages' %}">
+                        <i class="fas fa-envelope me-2"></i>Сообщения
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white {% if '/reports/' in request.path %}active bg-primary rounded{% endif %}"
+                       href="{% url 'reports:index' %}">
+                        <i class="fas fa-file-excel me-2"></i>Отчёты
+                    </a>
+                </li>
+            </ul>
+
+            <!-- ПУБЛИЧНЫЙ РАЗДЕЛ -->
+            <p class="text-uppercase text-muted small mb-2 px-1">Информация</p>
+            <ul class="nav flex-column gap-1 mb-3">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'public:docs' %}">
+                        <i class="fas fa-folder-open me-2"></i>Документы
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'public:news' %}">
+                        <i class="fas fa-newspaper me-2"></i>Новости
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'public:faq' %}">
+                        <i class="fas fa-question-circle me-2"></i>Вопросы и ответы
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'public:contacts' %}">
+                        <i class="fas fa-phone-alt me-2"></i>Контакты
+                    </a>
+                </li>
+            </ul>
+
+            <!-- ДЛЯ СОТРУДНИКА И АДМИНИСТРАТОРА -->
+            {% if user.role == 'employee' or user.role == 'admin' %}
+			<p class="text-uppercase text-muted small mb-2 px-1">Управление</p>
+			<ul class="nav flex-column gap-1 mb-3">
+
+				<!-- Обращения родителей -->
+				<li class="nav-item">
+					<a class="nav-link text-white {% if '/feedback/' in request.path %}active bg-primary rounded{% endif %}"
+					   href="{% url 'public:staff_feedback_list' %}">
+						<i class="fas fa-inbox me-2"></i>Обращения родителей
+					</a>
+				</li>
+
+				<!-- Список родителей -->
+				<li class="nav-item">
+					<a class="nav-link text-white {% if '/parents/' in request.path and 'relation' not in request.path %}active bg-primary rounded{% endif %}"
+					   href="{% url 'parents:parent-list' %}">
+						<i class="fas fa-users me-2"></i>Родители
+					</a>
+				</li>
+
+				<!-- Связи родитель–студент -->
+				<li class="nav-item">
+					<a class="nav-link text-white {% if 'relations' in request.path %}active bg-primary rounded{% endif %}"
+					   href="{% url 'parents:relation-list' %}">
+						<i class="fas fa-link me-2"></i>Связи родитель–студент
+					</a>
+				</li>
+
+				<!-- Сотрудники -->
+				<li class="nav-item">
+					<a class="nav-link text-white {% if '/employees/' in request.path %}active bg-primary rounded{% endif %}"
+					   href="{% url 'employees:employee_list' %}">
+						<i class="fas fa-user-tie me-2"></i>Сотрудники
+					</a>
+				</li>
+
+				<!-- Контактные лица -->
+				<li class="nav-item">
+					<a class="nav-link text-white {% if '/contact-persons/' in request.path %}active bg-primary rounded{% endif %}"
+					   href="{% url 'employees:contact_persons_list' %}">
+						<i class="fas fa-address-book me-2"></i>Контактные лица
+					</a>
+				</li>
+
+				<!-- Django Admin — только для admin -->
+				{% if user.role == 'admin' %}
+				<li class="nav-item">
+					<a class="nav-link text-white" href="{% url 'admin:index' %}">
+						<i class="fas fa-cog me-2"></i>Django Admin
+					</a>
+				</li>
+				{% endif %}
+
+			</ul>
+			{% endif %}
+
+
+            <!-- ПРОФИЛЬ И ВЫХОД -->
+            <div class="mt-auto">
+                <hr class="border-secondary">
+                <a class="nav-link text-white-50 small" href="{% url 'core:logout' %}">
+                    <i class="fas fa-sign-out-alt me-2"></i>Выйти из системы
+                </a>
+            </div>
+        </nav>
+        {% endif %}
+
+        <!-- ОСНОВНОЙ КОНТЕНТ -->
+        <main class="flex-grow-1">
+            <div class="container-fluid py-4">
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+
+                <!-- ===================== ХЛЕБНЫЕ КРОШКИ (BREADCRUMBS) ===================== -->
+                {% block breadcrumbs %}
+                {% if breadcrumbs %}
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb">
+                        {% for crumb in breadcrumbs %}
+                            {% if forloop.last %}
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {% if crumb.icon %}<i class="{{ crumb.icon }}"></i> {% endif %}
+                                   {{ crumb.title }}
+                                </li>
+                            {% else %}
+                                <li class="breadcrumb-item">
+                                    <a href="{{ crumb.url }}">
+                                        {% if crumb.icon %}<i class="{{ crumb.icon }}"></i> {% endif %}
+                                        {{ crumb.title }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ol>
+                </nav>
+               {% endif %}
+                {% endblock breadcrumbs %}
+                <!-- СОДЕРЖИМОЕ КОНКРЕТНОЙ СТРАНИЦЫ -->
+                <!-- Контент конкретной страницы будет подставляться ниже -->
+			    {% block content %}{% endblock %}
+            </div>
+        </main>
+
+    </div>
     <!-- ===================== ПОДВАЛ (FOOTER) ===================== -->
     <!-- Информация о приложении внизу страницы -->
     <footer class="bg-dark text-white text-center py-3 mt-5">
