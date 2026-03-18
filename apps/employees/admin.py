@@ -275,7 +275,7 @@ class EmployeeAdmin(admin.ModelAdmin):
         'email',
         'phone',
     ]
-    readonly_fields = ['hire_date', 'created_at', 'updated_at', 'get_years_of_service']
+    readonly_fields = ['created_at', 'updated_at', 'get_years_of_service']
     inlines = [EmployeeScheduleInline]
 
     fieldsets = (

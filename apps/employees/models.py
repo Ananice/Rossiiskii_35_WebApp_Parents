@@ -361,7 +361,8 @@ class Employee(models.Model):
         help_text="Статус сотрудника"
     )
     hire_date = models.DateField(
-        auto_now_add=True,
+        blank=True,
+        null=True,
         help_text="Дата найма"
     )
     termination_date = models.DateField(
@@ -412,12 +413,7 @@ class Employee(models.Model):
             models.Index(fields=['position', 'status']),
             models.Index(fields=['department', '-hire_date']),
         ]
-        constraints = [
-            models.CheckConstraint(
-                check=models.Q(hire_date__lte=timezone.now().date()),
-                name='hire_date_not_future'
-            )
-        ]
+        constraints = []
 
     def __str__(self):
         return f"{self.last_name} {self.first_name} ({self.employee_id})"
@@ -442,6 +438,8 @@ class Employee(models.Model):
 
     def get_years_of_service(self):
         """Возвращает стаж работы в годах."""
+        if not self.hire_date:
+            return 0
         end_date = self.termination_date if self.termination_date else timezone.now().date()
         return (end_date - self.hire_date).days // 365
 
