@@ -343,9 +343,11 @@ class ParentStudentRelation(models.Model):
     )
     # Студент (внешняя связь - предполагаем наличие модели Student)
     # Поле integer для гибкости (в случае если Student в другом приложении)
-    student_id = models.IntegerField(
-        db_index=True,
-        help_text="ID студента"
+    student = models.ForeignKey(
+        'students.Student',
+        on_delete=models.CASCADE,
+        related_name='parent_relations',
+        help_text="Студент"
     )
     # Тип родственной связи
     relation_type = models.ForeignKey(
@@ -385,7 +387,7 @@ class ParentStudentRelation(models.Model):
         verbose_name_plural = "Связи родителей со студентами"
         ordering = ['parent', 'is_primary_contact']
         # Один родитель не может иметь две связи с одним студентом одного типа
-        unique_together = [['parent', 'student_id', 'relation_type']]
+        unique_together = [['parent', 'student', 'relation_type']]
 
-    def __str__(self):
-        return f"{self.parent.get_full_name()} ({self.relation_type.name}) - Студент {self.student_id}"
+        def __str__(self):
+            return f"{self.parent.get_full_name()} ({self.relation_type.name}) - {self.student.full_name}"
