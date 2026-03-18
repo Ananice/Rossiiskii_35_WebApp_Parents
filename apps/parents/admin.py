@@ -134,7 +134,7 @@ class ParentStudentRelationAdmin(admin.ModelAdmin):
     
     list_display = (
         'get_parent_name',
-        'student_id',
+        'student',
         'relation_type',
         'is_primary_contact',
         'is_active',
@@ -149,13 +149,13 @@ class ParentStudentRelationAdmin(admin.ModelAdmin):
     search_fields = (
         'parent__first_name',
         'parent__last_name',
-        'student_id'
+        'student__full_name'
     )
     readonly_fields = ('start_date', 'created_at', 'updated_at')
     
     fieldsets = (
         ('Связь', {
-            'fields': ('parent', 'student_id', 'relation_type')
+            'fields': ('parent', 'student', 'relation_type')
         }),
         ('Статус', {
             'fields': ('is_primary_contact', 'is_active')
@@ -177,19 +177,17 @@ class ParentStudentRelationAdmin(admin.ModelAdmin):
     actions = ['mark_primary_contact', 'mark_active_relations', 'mark_inactive_relations']
     
     def mark_primary_contact(self, request, queryset):
-        """Действие для установки как основного контакта."""
         updated = queryset.update(is_primary_contact=True)
         self.message_user(request, f'{updated} отношений установлены как основной контакт.')
     mark_primary_contact.short_description = 'Установить как основной контакт'
     
     def mark_active_relations(self, request, queryset):
-        """Действие для активации отношений."""
         updated = queryset.update(is_active=True)
         self.message_user(request, f'{updated} отношений активированы.')
     mark_active_relations.short_description = 'Активировать отношения'
     
     def mark_inactive_relations(self, request, queryset):
-        """Действие для деактивации отношений."""
         updated = queryset.update(is_active=False)
         self.message_user(request, f'{updated} отношений деактивированы.')
     mark_inactive_relations.short_description = 'Деактивировать отношения'
+
