@@ -101,7 +101,7 @@
                 </a>
 
                 <!-- КНОПКА 2: Управление пользователями -->
-                <a href="/admin/auth/user/" class="btn btn-sm btn-info">
+                <a href="/admin/communications/user/" class="btn btn-sm btn-info">
                     <i class="fas fa-users"></i> Управление пользователями
                 </a>
 
@@ -111,7 +111,7 @@
                 </a>
 
                 <!-- КНОПКА 4: Отчёты -->
-                <a href="/admin/reports/" class="btn btn-sm btn-warning">
+                <a href="/admin/communications/report/" class="btn btn-sm btn-warning">
                     <i class="fas fa-file-alt"></i> Отчёты
                 </a>
             </div>
@@ -190,7 +190,7 @@
 
                             <!-- ДЕЙСТВИЯ (КНОПКА РЕДАКТИРОВАНИЯ) -->
                             <td>
-                                <a href="/admin/auth/user/{{ user.id }}/change/" class="btn btn-xs btn-warning">
+                                <a href="/admin/communications/user/{{ user.id }}/change/" class="btn btn-xs btn-warning">
                                     <!-- /change/ = Django страница редактирования -->
                                     
                                     <i class="fas fa-edit"></i>

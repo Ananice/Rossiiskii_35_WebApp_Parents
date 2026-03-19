@@ -30,7 +30,7 @@ from django.db.models import Q
 from django.utils.timezone import now
 import json
 
-from apps.communications.models import User, Message
+from apps.communications.models import User, Message, Report
 from apps.students.models import Student
 from apps.employees.models import Employee
 from apps.parents.models import Parent
@@ -212,8 +212,9 @@ def dashboard(request):
         context.update({
             'users_count': User.objects.count(),
             'messages_count': Message.objects.count(),
+            'reports_count': Report.objects.count(),
             'active_sessions': User.objects.filter(last_login__isnull=False).count(),
-            'users': User.objects.all()[:50],  # Первые 50 пользователей
+            'users': User.objects.all()[:50],
         })
         context['breadcrumbs'] = [
             {'title': 'Главная', 'url': '/', 'icon': 'fas fa-home'},
