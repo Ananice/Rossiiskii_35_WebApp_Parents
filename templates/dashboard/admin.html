@@ -170,12 +170,19 @@
                             
                             <!-- РОЛЬ (ЗНАЧОК) -->
                             <td>
-                                <span class="badge bg-{{ user.role|default:'secondary' }}">
-                                    <!-- badge = маленький прямоугольник -->
-                                    
-                                    {{ user.role|default:'unknown' }}
-                                </span>
-                            </td>
+								{% if user.role == 'admin' %}
+									<span class="badge bg-danger">Администратор</span>
+								{% elif user.role == 'employee' %}
+									<span class="badge bg-primary">Сотрудник</span>
+								{% elif user.role == 'parent' %}
+									<span class="badge bg-success">Родитель</span>
+								{% elif user.role == 'student' %}
+									<span class="badge bg-info">Студент</span>
+								{% else %}
+									<span class="badge bg-secondary">{{ user.role|default:"—" }}</span>
+								{% endif %}
+							</td>
+
 
                             <!-- СТАТУС (АКТИВЕН/НЕАКТИВЕН) -->
                             <td>
