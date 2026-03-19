@@ -12,18 +12,26 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        # 1. Сначала удаляем старый unique_together по student_id
         migrations.AlterUniqueTogether(
             name='parentstudentrelation',
-            unique_together={('parent', 'student', 'relation_type')},
+            unique_together=set(),
         ),
+        # 2. Добавляем новое поле student (ForeignKey)
         migrations.AddField(
             model_name='parentstudentrelation',
             name='student',
             field=models.ForeignKey(default=1, help_text='Студент', on_delete=django.db.models.deletion.CASCADE, related_name='parent_relations', to='students.student'),
             preserve_default=False,
         ),
+        # 3. Удаляем старое поле student_id
         migrations.RemoveField(
             model_name='parentstudentrelation',
             name='student_id',
+        ),
+        # 4. Теперь устанавливаем новый unique_together по student
+        migrations.AlterUniqueTogether(
+            name='parentstudentrelation',
+            unique_together={('parent', 'student', 'relation_type')},
         ),
     ]

@@ -40,7 +40,7 @@
                 <ul class="list-group list-group-flush">
                     {% for rel in student_relations %}
                     <li class="list-group-item d-flex justify-content-between">
-                        <span>Студент ID: <strong>{{ rel.student_id }}</strong></span>
+                        <span><strong>{{ rel.student.full_name }}</strong> ({{ rel.student.student_id }})</span>
                         <span class="badge bg-info">{{ rel.relation_type.name }}</span>
                     </li>
                     {% endfor %}

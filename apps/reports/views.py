@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from apps.communications.models import Message
-
+from openpyxl.cell.cell import MergedCell
 
 @login_required(login_url='core:login')
 def reports_index(request):
@@ -66,8 +66,17 @@ def export_messages_xlsx(request):
         ])
 
     for col in ws.columns:
-        max_len = max((len(str(cell.value or "")) for cell in col), default=10)
-        ws.column_dimensions[col[0].column_letter].width = min(max_len + 4, 50)
+        col_letter = None
+        max_len = 10
+        for cell in col:
+            if isinstance(cell, MergedCell):
+                continue
+            if col_letter is None:
+                col_letter = cell.column_letter
+            if cell.value:
+                max_len = max(max_len, len(str(cell.value)))
+        if col_letter:
+            ws.column_dimensions[col_letter].width = min(max_len + 4, 50)
 
     ws2 = wb.create_sheet("Информация")
     ws2.append(["Параметр", "Значение"])
