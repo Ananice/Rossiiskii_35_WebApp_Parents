@@ -1,5 +1,83 @@
 {% extends "public/base_public.html" %}
 {% block public_content %}
-<h1>О проекте</h1>
-<p>Веб-приложение для взаимодействия сотрудников колледжа с родителями обучающихся.</p>
+
+<div class="row mb-4">
+  <div class="col-12">
+    <h1 class="mb-1">О проекте</h1>
+    <p class="text-muted">Веб-приложение взаимодействия сотрудников колледжа с родителями обучающихся</p>
+    <hr>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-8">
+    <h5>Цель системы</h5>
+    <p>
+      Портал разработан в рамках выпускной квалификационной работы студента направления
+      «Бизнес-информатика» ЧОУВО «МУ им. С.Ю. Витте». Система автоматизирует процесс
+      взаимодействия сотрудников колледжа с родителями (законными представителями) обучающихся,
+      заменяя разрозненные каналы (телефон, мессенджеры, личные встречи) единой цифровой платформой.
+    </p>
+
+    <h5>Проблема</h5>
+    <p>
+      До внедрения системы взаимодействие осуществлялось преимущественно по телефону и через
+      мессенджеры, что приводило к потере обращений, отсутствию истории переписки и невозможности
+      контроля сроков ответа. Отсутствовал единый реестр обращений родителей.
+    </p>
+
+    <h5>Решение</h5>
+    <p>
+      Разработан портал на базе Django 5 и PostgreSQL с ролевой моделью доступа.
+      Система обеспечивает регистрацию обращений, обмен сообщениями, формирование отчётности
+      и публикацию новостей колледжа в одном интерфейсе.
+    </p>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card border-primary">
+      <div class="card-header bg-primary text-white">
+        <i class="fas fa-info-circle"></i> Технологический стек
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><i class="fab fa-python text-primary"></i> Python 3.12 / Django 5.1</li>
+        <li class="list-group-item"><i class="fas fa-database text-info"></i> PostgreSQL 16</li>
+        <li class="list-group-item"><i class="fab fa-bootstrap text-purple"></i> Bootstrap 5.3</li>
+        <li class="list-group-item"><i class="fab fa-js text-warning"></i> JavaScript (Fetch API)</li>
+        <li class="list-group-item"><i class="fab fa-git-alt text-danger"></i> Git / GitHub</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card text-center border-0 shadow-sm">
+      <div class="card-body">
+        <i class="fas fa-users fa-2x text-primary mb-2"></i>
+        <h6 class="card-title">3 роли пользователей</h6>
+        <p class="text-muted small">Администратор, Сотрудник, Родитель</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center border-0 shadow-sm">
+      <div class="card-body">
+        <i class="fas fa-comments fa-2x text-success mb-2"></i>
+        <h6 class="card-title">Система сообщений</h6>
+        <p class="text-muted small">Личная переписка и обращения</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center border-0 shadow-sm">
+      <div class="card-body">
+        <i class="fas fa-file-alt fa-2x text-warning mb-2"></i>
+        <h6 class="card-title">Отчётность</h6>
+        <p class="text-muted small">Выгрузка в Excel / PDF</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
