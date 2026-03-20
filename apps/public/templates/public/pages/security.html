@@ -1,9 +1,191 @@
 {% extends "public/base_public.html" %}
 {% block public_content %}
-<h1>Безопасность</h1>
-<ul class="mb-0">
-  <li>Разграничение доступа по ролям.</li>
-  <li>Защита форм через CSRF.</li>
-  <li>Ограничение вложений по размеру.</li>
-</ul>
+
+<div class="row mb-4">
+  <div class="col-12">
+    <h1 class="mb-1">Безопасность</h1>
+    <p class="text-muted">Технические меры защиты данных и доступа в портале</p>
+    <hr>
+  </div>
+</div>
+
+<div class="row g-4">
+
+  <!-- КОЛОНКА 1 -->
+  <div class="col-md-6">
+
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-primary text-white">
+        <i class="fas fa-user-lock me-2"></i>Аутентификация и доступ
+      </div>
+      <div class="card-body">
+        <ul class="list-unstyled mb-0">
+          <li class="mb-3">
+            <i class="fas fa-check-circle text-success me-2"></i>
+            <strong>Ролевая модель доступа</strong>
+            <p class="text-muted small mb-0 ms-4">
+              Три роли: администратор, сотрудник, родитель. Каждая роль имеет строго
+              ограниченный набор доступных разделов и действий.
+            </p>
+          </li>
+          <li class="mb-3">
+            <i class="fas fa-check-circle text-success me-2"></i>
+            <strong>Хэширование паролей</strong>
+            <p class="text-muted small mb-0 ms-4">
+              Пароли хранятся в БД исключительно в хэшированном виде.
+              Используется алгоритм <code>PBKDF2 + SHA-256</code> — стандарт Django.
+            </p>
+          </li>
+          <li class="mb-3">
+            <i class="fas fa-check-circle text-success me-2"></i>
+            <strong>Декораторы защиты представлений</strong>
+            <p class="text-muted small mb-0 ms-4">
+              Все закрытые страницы защищены декораторами
+              <code>@login_required</code> и <code>@role_required</code>.
+              Незарегистрированный пользователь перенаправляется на страницу входа.
+            </p>
+          </li>
+          <li class="mb-0">
+            <i class="fas fa-check-circle text-success me-2"></i>
+            <strong>Изоляция данных по ролям</strong>
+            <p class="text-muted small mb-0 ms-4">
+              Родитель видит только своих студентов и своих сотрудников.
+              Сотрудник видит только обращения, адресованные ему.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- КОЛОНКА 2 -->
+  <div class="col-md-6">
+
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-success text-white">
+        <i class="fas fa-shield-alt me-2"></i>Защита от атак
+      </div>
+      <div class="card-body">
+        <ul class="list-unstyled mb-0">
+          <li class="mb-3">
+            <i class="fas fa-check-circle text-success me-2"></i>
+            <strong>CSRF-защита форм</strong>
+            <p class="text-muted small mb-0 ms-4">
+              Все формы содержат токен <code>{% verbatim %}{% csrf_token %}{% endverbatim %}</code>.
+              Django автоматически отклоняет POST-запросы без валидного токена.
+            </p>
+          </li>
+          <li class="mb-3">
+            <i class="fas fa-check-circle text-success me-2"></i>
+            <strong>Защита от SQL-инъекций</strong>
+            <p class="text-muted small mb-0 ms-4">
+              Все запросы к БД выполняются через ORM Django —
+              параметризованные запросы исключают SQL-инъекции на уровне фреймворка.
+            </p>
+          </li>
+          <li class="mb-3">
+            <i class="fas fa-check-circle text-success me-2"></i>
+            <strong>Защита от XSS</strong>
+            <p class="text-muted small mb-0 ms-4">
+              Шаблонизатор Django автоматически экранирует пользовательский ввод
+              при выводе в HTML, предотвращая межсайтовый скриптинг.
+            </p>
+          </li>
+          <li class="mb-0">
+            <i class="fas fa-check-circle text-success me-2"></i>
+            <strong>Валидация загружаемых файлов</strong>
+            <p class="text-muted small mb-0 ms-4">
+              Вложения проверяются по типу (<code>MIME-type</code>) и размеру.
+              Допустимы только PDF, JPG, PNG, DOCX, XLSX. Лимит — 5 МБ.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- НИЖНИЙ РЯД -->
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-warning text-dark">
+        <i class="fas fa-database me-2"></i>Защита данных
+      </div>
+      <div class="card-body">
+        <ul class="list-unstyled mb-0">
+          <li class="mb-3">
+            <i class="fas fa-check-circle text-success me-2"></i>
+            <strong>PostgreSQL как СУБД</strong>
+            <p class="text-muted small mb-0 ms-4">
+              Данные хранятся в реляционной БД PostgreSQL с поддержкой
+              транзакций и ограничений целостности.
+            </p>
+          </li>
+          <li class="mb-3">
+            <i class="fas fa-check-circle text-success me-2"></i>
+            <strong>Переменные окружения</strong>
+            <p class="text-muted small mb-0 ms-4">
+              Секретный ключ Django, строка подключения к БД и прочие
+              чувствительные параметры вынесены в <code>.env</code>
+              и не хранятся в репозитории.
+            </p>
+          </li>
+          <li class="mb-0">
+            <i class="fas fa-check-circle text-success me-2"></i>
+            <strong>Согласие на обработку ПДн</strong>
+            <p class="text-muted small mb-0 ms-4">
+              Форма обращения содержит обязательный чекбокс согласия.
+              Без него отправка невозможна.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-secondary text-white">
+        <i class="fas fa-cogs me-2"></i>Технический стек защиты
+      </div>
+      <div class="card-body">
+        <table class="table table-sm table-borderless mb-0">
+          <tbody>
+            <tr>
+              <td class="text-muted small">Фреймворк</td>
+              <td><span class="badge bg-success">Django 4.x</span></td>
+            </tr>
+            <tr>
+              <td class="text-muted small">Хэширование паролей</td>
+              <td><span class="badge bg-primary">PBKDF2 + SHA-256</span></td>
+            </tr>
+            <tr>
+              <td class="text-muted small">CSRF-защита</td>
+              <td><span class="badge bg-primary">Django Middleware</span></td>
+            </tr>
+            <tr>
+              <td class="text-muted small">ORM (SQL-инъекции)</td>
+              <td><span class="badge bg-primary">Django ORM</span></td>
+            </tr>
+            <tr>
+              <td class="text-muted small">XSS-защита</td>
+              <td><span class="badge bg-primary">Django Templates</span></td>
+            </tr>
+            <tr>
+              <td class="text-muted small">СУБД</td>
+              <td><span class="badge bg-info text-dark">PostgreSQL</span></td>
+            </tr>
+            <tr>
+              <td class="text-muted small">Конфигурация</td>
+              <td><span class="badge bg-secondary">python-decouple (.env)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 {% endblock %}
