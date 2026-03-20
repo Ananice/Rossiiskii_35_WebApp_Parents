@@ -1,9 +1,96 @@
 {% extends "public/base_public.html" %}
 {% block public_content %}
-<h1>Возможности</h1>
-<ul>
-  <li>Единый канал коммуникации колледж ↔ родители.</li>
-  <li>Сообщения и уведомления.</li>
-  <li>Обратная связь с вложениями (до 5 МБ) с хранением в БД.</li>
-</ul>
+
+<div class="row mb-4">
+  <div class="col-12">
+    <h1 class="mb-1">Возможности системы</h1>
+    <p class="text-muted">Что умеет портал взаимодействия колледжа с родителями</p>
+    <hr>
+  </div>
+</div>
+
+<div class="row g-4">
+
+  <div class="col-md-6">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <i class="fas fa-envelope-open-text fa-2x text-primary me-3"></i>
+          <h5 class="mb-0">Обращения родителей</h5>
+        </div>
+        <p class="text-muted">Родители отправляют обращения через публичную форму без регистрации.
+        Каждому обращению присваивается уникальный номер (FB-YYYY-XXXXXX).
+        Сотрудники обрабатывают обращения в личном кабинете и меняют статус.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <i class="fas fa-comments fa-2x text-success me-3"></i>
+          <h5 class="mb-0">Система сообщений</h5>
+        </div>
+        <p class="text-muted">Внутренний чат между сотрудниками и зарегистрированными родителями.
+        История переписки сохраняется в базе данных. Новые сообщения отображаются
+        в реальном времени через Fetch API.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <i class="fas fa-chart-bar fa-2x text-warning me-3"></i>
+          <h5 class="mb-0">Отчётность</h5>
+        </div>
+        <p class="text-muted">Администратор и сотрудники формируют отчёты по обращениям,
+        пользователям и активности. Поддерживается выгрузка в формате Excel (xlsx).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <i class="fas fa-newspaper fa-2x text-info me-3"></i>
+          <h5 class="mb-0">Новости колледжа</h5>
+        </div>
+        <p class="text-muted">Сотрудники публикуют новости и объявления. Родители видят
+        актуальную информацию на публичном портале без необходимости авторизации.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <i class="fas fa-shield-alt fa-2x text-danger me-3"></i>
+          <h5 class="mb-0">Ролевая модель доступа</h5>
+        </div>
+        <p class="text-muted">Три роли: Администратор, Сотрудник, Родитель. Каждая роль видит
+        только свой функционал. Доступ разграничен на уровне представлений Django.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <i class="fas fa-link fa-2x text-secondary me-3"></i>
+          <h5 class="mb-0">Связи родитель — студент</h5>
+        </div>
+        <p class="text-muted">В системе фиксируется тип родственной связи: мать, отец, опекун.
+        Сотрудник видит к каким студентам привязан родитель при обработке обращений.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 {% endblock %}
