@@ -1,152 +1,94 @@
 {% extends 'base/base.html' %}
-<!-- ^^ extends = наследуем base.html (используем его макет) -->
-
 {% load static %}
 
-{% block title %}Вход - МУИВ Портал{% endblock %}
-<!-- ^^ Меняем заголовок вкладки для этой страницы -->
+{% block title %}Вход — Портал взаимодействия{% endblock %}
+
+{% block site_footer %}{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center mt-5">
-        <!-- justify-content-center = центрировать по горизонтали -->
-        <!-- mt-5 = большой отступ сверху -->
-        
-        <div class="col-md-6">
-            <!-- col-md-6 = занимает половину экрана на больших мониторах -->
-            
-            <!-- КАРТОЧКА С ФОРМОЙ ВХОДА -->
-            <div class="card shadow-lg">
-                <!-- shadow-lg = тень под карточкой -->
-                
-                <!-- ЗАГОЛОВОК КАРТОЧКИ -->
-                <div class="card-header bg-primary text-white text-center py-4">
-                    <h2 class="mb-0">
-                        <i class="fas fa-sign-in-alt"></i> Вход в систему
-                    </h2>
-                    <small>Веб-портал взаимодействия</small>
-                </div>
+<div class="row justify-content-center mt-4">
+  <div class="col-md-5 col-lg-4">
 
-                <!-- ОСНОВНОЕ СОДЕРЖИМОЕ КАРТОЧКИ -->
-                <div class="card-body p-4">
-                    
-                    <!-- ОШИБКИ ВХОДА (если логин/пароль неправильные) -->
-                    {% if error %}
-                        <div class="alert alert-danger">
-                            <strong>❌ Ошибка входа:</strong> {{ error }}
-                        </div>
-                    {% endif %}
+    <div class="card shadow border-0">
+      <div class="card-body p-4">
 
-                    <!-- ФОРМА ВХОДА -->
-                    <form method="post" class="needs-validation" novalidate>
-                        <!-- method="post" = отправлять данные защищённо -->
-                        <!-- needs-validation = класс для Bootstrap валидации -->
-                        
-                        {% csrf_token %}
-                        <!-- csrf_token = защита от взломов (обязательно в каждой форме) -->
-
-                        <!-- ================== ПОЛЕ ЛОГИНА ================== -->
-                        <div class="mb-3">
-                            <!-- mb-3 = отступ снизу -->
-                            
-                            <label for="id_username" class="form-label">
-                                <i class="fas fa-user"></i> Логин
-                            </label>
-                            
-                            <input 
-                                type="text" 
-                                class="form-control"
-								id="id_username"
-								name="username"
-								placeholder="Введите логин"
-								required
-								value="{{ username|default:'' }}"
-                            >
-                        </div>
-
-                        <!-- ================== ПОЛЕ ПАРОЛЯ ================== -->
-                        <div class="mb-3">
-                            <label for="id_password" class="form-label">
-                                <i class="fas fa-lock"></i> Пароль
-                            </label>
-                            
-                            <input 
-                                type="password" 
-                                class="form-control"
-                                id="id_password"
-                                name="password"
-                                placeholder="Введите пароль"
-                                required
-                            >
-                        </div>
-
-                        <!-- ================== СПРАВКА О РОЛЯХ ================== -->
-                        <!-- Инфо-блок с тестовыми данными для демо -->
-                        <div class="alert alert-info mb-4 small">
-                                <strong>Демо-аккаунты (логины):</strong><br>
-                                <code>admin</code><br>
-                                <code>staff1</code><br>
-                                <code>parent1</code><br>
-								<span class="text-muted">Пароли предоставляются преподавателю/в отчёте.</span>
-                        </div>
-
-                        <!-- ================== КНОПКА ВХОДА ================== -->
-                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
-                            <!-- w-100 = ширина 100% -->
-                            <!-- py-2 = отступы сверху/снизу -->
-                            <!-- fw-bold = жирный текст -->
-                            
-                            <i class="fas fa-arrow-right"></i> Войти
-                        </button>
-                    </form>
-
-                    <!-- РАЗДЕЛИТЕЛЬ -->
-                    <hr class="my-4">
-
-                    <!-- ПРИМЕЧАНИЕ -->
-                    <div class="alert alert-light border-1">
-                        <small class="text-muted">
-                            <i class="fas fa-info-circle"></i>
-                            Это демо-система для учебного проекта.
-                        </small>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ИНФОРМАЦИЯ ВНИЗУ -->
-            <div class="text-center mt-4">
-                <small class="text-muted">
-                    Веб-приложение взаимодействия сотрудников и родителей<br>
-                    Московский университет имени С.Ю. Витте
-                </small>
-            </div>
+        <!-- Заголовок -->
+        <div class="text-center mb-4">
+          <i class="fas fa-graduation-cap fa-2x text-primary mb-2"></i>
+          <h5 class="fw-bold mb-1">Портал взаимодействия</h5>
+          <p class="text-muted small mb-0">ЧОУВО «МУ им. С.Ю. Витте»</p>
         </div>
-    </div>
-</div>
 
-<!-- ================== JAVASCRIPT ДЛЯ ВАЛИДАЦИИ ФОРМЫ ================== -->
-<script>
-    // Когда страница загружена, добавить проверку формы
-    (function() {
-        'use strict'; // Строгий режим (ловит ошибки)
-        
-        // Найти все формы с классом needs-validation
-        const forms = document.querySelectorAll('.needs-validation');
-        
-        // Для каждой формы:
-        Array.from(forms).forEach(form => {
-            // При отправке формы (на кнопку "Войти")
-            form.addEventListener('submit', event => {
-                // Если форма НЕ прошла проверку
-                if (!form.checkValidity()) {
-                    // Остановить отправку
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                // Добавить класс was-validated (показать ошибки красным)
-                form.classList.add('was-validated');
-            }, false);
-        });
-    })();
-</script>
+        <!-- Ошибка -->
+        {% if error %}
+        <div class="alert alert-danger py-2 small">
+          <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+        </div>
+        {% endif %}
+
+        <!-- Форма -->
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Логин</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0">
+                <i class="fas fa-user text-muted small"></i>
+              </span>
+              <input type="text" name="username"
+                     class="form-control border-start-0 ps-0"
+                     placeholder="Введите логин"
+                     value="{{ username|default:'' }}" required>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-semibold">Пароль</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0">
+                <i class="fas fa-lock text-muted small"></i>
+              </span>
+              <input type="password" name="password"
+                     class="form-control border-start-0 ps-0"
+                     placeholder="Введите пароль" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+            Войти <i class="fas fa-arrow-right ms-1"></i>
+          </button>
+        </form>
+
+        <!-- Демо-доступ -->
+        <div class="mt-4 p-3 rounded bg-light border small">
+          <p class="fw-semibold mb-2 text-muted text-uppercase"
+             style="font-size:.7rem; letter-spacing:.05em;">Демо-доступ</p>
+          <div class="d-flex gap-2 flex-wrap mb-2">
+            <code class="bg-white border rounded px-2 py-1">admin</code>
+            <code class="bg-white border rounded px-2 py-1">staff1</code>
+            <code class="bg-white border rounded px-2 py-1">parent1</code>
+          </div>
+          <p class="text-muted mb-0" style="font-size:.75rem;">
+            Пароли предоставляются преподавателю / в отчёте.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Подвал — как на публичных страницах -->
+    <div class="text-center text-muted mt-3 small">
+      Веб-приложение взаимодействия сотрудников и родителей<br>
+      Московский университет имени С.Ю. Витте<br>
+      <span class="mt-1 d-inline-block">
+        Автор: Российский Даниил Ильич. 2025–2026.
+        &nbsp;|&nbsp; <a href="{% url 'public:privacy' %}">Политика ПДн</a>
+        &nbsp;|&nbsp; <a href="{% url 'public:terms' %}">Соглашение</a>
+      </span>
+    </div>
+
+  </div>
+</div>
 {% endblock %}
+
