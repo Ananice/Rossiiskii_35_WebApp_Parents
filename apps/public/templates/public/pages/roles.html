@@ -1,9 +1,73 @@
 {% extends "public/base_public.html" %}
 {% block public_content %}
-<h1>Роли</h1>
-<ul class="mb-0">
-  <li>Администратор: управление пользователями и настройками.</li>
-  <li>Сотрудник: работа с обращениями и коммуникациями.</li>
-  <li>Родитель/студент: получение информации и взаимодействие.</li>
-</ul>
+
+<div class="row mb-4">
+  <div class="col-12">
+    <h1 class="mb-1">Роли пользователей</h1>
+    <p class="text-muted">Кто работает в системе и какие функции доступны каждой роли</p>
+    <hr>
+  </div>
+</div>
+
+<div class="row g-4">
+
+  <div class="col-md-4">
+    <div class="card h-100 border-danger border-2">
+      <div class="card-header bg-danger text-white">
+        <i class="fas fa-shield-alt"></i> Администратор
+      </div>
+      <div class="card-body">
+        <p class="text-muted small mb-3">Полный контроль над системой</p>
+        <ul class="list-unstyled">
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Управление пользователями</li>
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Назначение ролей</li>
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Просмотр всех обращений</li>
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Формирование отчётов</li>
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Доступ к Django Admin</li>
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Панель администратора</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card h-100 border-primary border-2">
+      <div class="card-header bg-primary text-white">
+        <i class="fas fa-user-tie"></i> Сотрудник
+      </div>
+      <div class="card-body">
+        <p class="text-muted small mb-3">Работа с обращениями и родителями</p>
+        <ul class="list-unstyled">
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Просмотр обращений родителей</li>
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Смена статуса обращений</li>
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Переписка с родителями</li>
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Публикация новостей</li>
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Просмотр списка родителей</li>
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Карточки студентов</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card h-100 border-success border-2">
+      <div class="card-header bg-success text-white">
+        <i class="fas fa-user-friends"></i> Родитель
+      </div>
+      <div class="card-body">
+        <p class="text-muted small mb-3">Взаимодействие с колледжем</p>
+        <ul class="list-unstyled">
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Подача обращений</li>
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Переписка с сотрудниками</li>
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Просмотр новостей</li>
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Информация о студенте</li>
+          <li class="mb-1"><i class="fas fa-check text-success me-2"></i>История обращений</li>
+          <li class="mb-1"><i class="fas fa-minus text-secondary me-2"></i>Нет доступа к Admin</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 {% endblock %}
