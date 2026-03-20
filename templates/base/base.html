@@ -28,80 +28,35 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <!-- ===================== НАВИГАЦИОННОЕ МЕНЮ (NAVBAR) ===================== -->
-    <!-- Меню с кнопками и пользовательской информацией -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            
-            <!-- ЛОГОТИП И НАЗВАНИЕ САЙТА -->
+
+            <!-- ЛОГОТИП -->
             <a class="navbar-brand" href="/">
-                <i class="fas fa-graduation-cap"></i> <!-- Иконка академической шапки -->
-                МУИВ Портал
+                <i class="fas fa-graduation-cap"></i> МУИВ Портал
             </a>
-            
-            <!-- КНОПКА "МЕНЮ" ДЛЯ МОБИЛЬНЫХ (скрывается на больших экранах) -->
+
+            <!-- КНОПКА ДЛЯ МОБИЛЬНЫХ -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- ОСНОВНОЕ МЕНЮ (скрывается на мобильных) -->
+            <!-- МЕНЮ СПРАВА -->
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto"> <!-- ms-auto = выровнять вправо -->
-                    
-                    <!-- ЕСЛИ ПОЛЬЗОВАТЕЛЬ АВТОРИЗОВАН (вошёл в систему) -->
+                <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
-                        
-                        <!-- ИНФОРМАЦИЯ О ПОЛЬЗОВАТЕЛЕ -->
+                        <!-- Только имя и роль — всё остальное в сайдбаре -->
                         <li class="nav-item">
-                            <span class="navbar-text me-3">
-                                👤 {{ user.get_full_name|default:user.username }} 
-                                <!-- |default:user.username = если ФИ не заполнено, показать логин -->
-                                
-                                <!-- РОЛЬ ПОЛЬЗОВАТЕЛЯ (видна мелким текстом) -->
-                                <small class="text-muted">({{ user.role }})</small>
+                            <span class="navbar-text text-white-50">
+                                <i class="fas fa-user-circle me-1"></i>
+                                {{ user.get_full_name|default:user.username }}
+                                <small class="opacity-75 ms-1">({{ user.role }})</small>
                             </span>
-                        </li>
-                        
-                        <!-- ССЫЛКА НА ПАНЕЛЬ УПРАВЛЕНИЯ -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'core:dashboard' %}">
-                                <i class="fas fa-tachometer-alt"></i> Панель
-                            </a>
-                        </li>
-                        
-                        <!-- ССЫЛКА НА СООБЩЕНИЯ -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'core:messages' %}">
-                                <i class="fas fa-envelope"></i> Сообщения
-                            </a>
-                        </li>
-                        
-                        <!-- АДМИН-ПАНЕЛЬ (ТОЛЬКО ДЛЯ АДМИНИСТРАТОРОВ) -->
-                        {% if user.role == 'administrator' %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'admin:index' %}">
-                                    <i class="fas fa-cog"></i> Админ
-                                </a>
-                            </li>
-                        {% endif %}
-                        
-                        <!-- КНОПКА ВЫХОДА -->
-                        <li class="nav-item">
-                            <a class="nav-link text-danger" href="{% url 'core:logout' %}">
-                                <i class="fas fa-sign-out-alt"></i> Выход
-                            </a>
-                        </li>
-                        
-                    <!-- ЕСЛИ ПОЛЬЗОВАТЕЛЬ НЕ АВТОРИЗОВАН (не вошёл) -->
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'core:login' %}">
-                                <i class="fas fa-sign-in-alt"></i> Вход
-                            </a>
                         </li>
                     {% endif %}
                 </ul>
             </div>
+
         </div>
     </nav>
 
@@ -110,7 +65,7 @@
 
         <!-- БОКОВОЕ МЕНЮ (только для авторизованных) -->
         {% if user.is_authenticated %}
-        <nav class="sidebar bg-dark text-white d-flex flex-column p-3" style="min-width:220px; min-height:calc(100vh - 56px);">
+        <nav class="sidebar bg-dark text-white d-flex flex-column p-3" style="min-width:220px; align-self:stretch;">
 
             <p class="text-uppercase text-muted small mb-2 px-1">Навигация</p>
             <ul class="nav flex-column gap-1 mb-3">
@@ -138,22 +93,22 @@
             <p class="text-uppercase text-muted small mb-2 px-1">Информация</p>
             <ul class="nav flex-column gap-1 mb-3">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'public:docs' %}">
+                    <a class="nav-link text-white {% if '/docs/' in request.path %}active bg-primary rounded{% endif %}" href="{% url 'public:docs' %}">
                         <i class="fas fa-folder-open me-2"></i>Документы
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'public:news' %}">
+                    <a class="nav-link text-white {% if '/news/' in request.path %}active bg-primary rounded{% endif %}" href="{% url 'public:news' %}">
                         <i class="fas fa-newspaper me-2"></i>Новости
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'public:faq' %}">
+                    <a class="nav-link text-white {% if '/faq/' in request.path %}active bg-primary rounded{% endif %}" href="{% url 'public:faq' %}">
                         <i class="fas fa-question-circle me-2"></i>Вопросы и ответы
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'public:contacts' %}">
+                    <a class="nav-link text-white {% if '/contacts/' in request.path %}active bg-primary rounded{% endif %}" href="{% url 'public:contacts' %}">
                         <i class="fas fa-phone-alt me-2"></i>Контакты
                     </a>
                 </li>
@@ -274,16 +229,19 @@
     </div>
     <!-- ===================== ПОДВАЛ (FOOTER) ===================== -->
     <!-- Информация о приложении внизу страницы -->
-    <footer class="bg-dark text-white text-center py-3 mt-5">
-        <div class="container">
-            <p class="mb-0">
-                <small>
-                    Веб-приложение взаимодействия сотрудников и родителей | 
-                    МУИВ им. С.Ю. Витте | 2025
-                </small>
-            </p>
-        </div>
-    </footer>
+    {% block site_footer %}
+	{% if not user.is_authenticated %}
+	<div class="text-center text-muted mt-3 small">
+      Веб-приложение взаимодействия сотрудников и родителей<br>
+      Московский университет имени С.Ю. Витте<br>
+      <span class="mt-1 d-inline-block">
+        Автор: Российский Даниил Ильич. 2025–2026.
+        &nbsp;|&nbsp; <a href="{% url 'public:privacy' %}">Политика ПДн</a>
+        &nbsp;|&nbsp; <a href="{% url 'public:terms' %}">Соглашение</a>
+      </span>
+    </div>
+	{% endif %}
+	{% endblock %}
 
     <!-- ===================== ПОДКЛЮЧЕНИЕ JAVASCRIPT БИБЛИОТЕК ===================== -->
     <!-- Bootstrap JS - нужен для интерактивных элементов (меню, модальные окна и т.д.) -->
