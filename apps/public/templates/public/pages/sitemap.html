@@ -1,17 +1,184 @@
 {% extends "public/base_public.html" %}
 {% block public_content %}
-<h1>Карта сайта</h1>
-<ul class="mb-0">
-  <li><a href="{% url 'public:index' %}">Главная</a></li>
-  <li><a href="{% url 'public:about' %}">О проекте</a></li>
-  <li><a href="{% url 'public:features' %}">Возможности</a></li>
-  <li><a href="{% url 'public:roles' %}">Роли</a></li>
-  <li><a href="{% url 'public:security' %}">Безопасность</a></li>
-  <li><a href="{% url 'public:docs' %}">Документация</a></li>
-  <li><a href="{% url 'public:faq' %}">FAQ</a></li>
-  <li><a href="{% url 'public:news' %}">Новости</a></li>
-  <li><a href="{% url 'public:contacts' %}">Обратная связь</a></li>
-  <li><a href="{% url 'public:privacy' %}">Политика ПДн</a></li>
-  <li><a href="{% url 'public:terms' %}">Соглашение</a></li>
-</ul>
+
+<div class="row mb-4">
+  <div class="col-12">
+    <h1 class="mb-1">Карта сайта</h1>
+    <p class="text-muted">Полный список разделов портала взаимодействия сотрудников колледжа с родителями</p>
+    <hr>
+  </div>
+</div>
+
+<div class="row g-4">
+
+  <!-- ПУБЛИЧНЫЙ РАЗДЕЛ -->
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-primary text-white">
+        <i class="fas fa-globe me-2"></i>Публичный раздел
+      </div>
+      <div class="list-group list-group-flush">
+        <a href="{% url 'public:index' %}" class="list-group-item list-group-item-action">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-home text-primary me-3 fa-fw"></i>
+            <div>
+              <div class="fw-semibold">Главная</div>
+              <div class="text-muted small">Приветственная страница портала</div>
+            </div>
+          </div>
+        </a>
+        <a href="{% url 'public:about' %}" class="list-group-item list-group-item-action">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-info-circle text-primary me-3 fa-fw"></i>
+            <div>
+              <div class="fw-semibold">О проекте</div>
+              <div class="text-muted small">Цели, задачи и назначение портала</div>
+            </div>
+          </div>
+        </a>
+        <a href="{% url 'public:features' %}" class="list-group-item list-group-item-action">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-star text-primary me-3 fa-fw"></i>
+            <div>
+              <div class="fw-semibold">Возможности</div>
+              <div class="text-muted small">Функциональные возможности системы</div>
+            </div>
+          </div>
+        </a>
+        <a href="{% url 'public:roles' %}" class="list-group-item list-group-item-action">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-users text-primary me-3 fa-fw"></i>
+            <div>
+              <div class="fw-semibold">Роли</div>
+              <div class="text-muted small">Описание ролей: администратор, сотрудник, родитель</div>
+            </div>
+          </div>
+        </a>
+        <a href="{% url 'public:security' %}" class="list-group-item list-group-item-action">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-shield-alt text-primary me-3 fa-fw"></i>
+            <div>
+              <div class="fw-semibold">Безопасность</div>
+              <div class="text-muted small">Технические меры защиты данных и доступа</div>
+            </div>
+          </div>
+        </a>
+        <a href="{% url 'public:news' %}" class="list-group-item list-group-item-action">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-newspaper text-primary me-3 fa-fw"></i>
+            <div>
+              <div class="fw-semibold">Новости</div>
+              <div class="text-muted small">Актуальные новости колледжа</div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ПРАВАЯ КОЛОНКА -->
+  <div class="col-md-6 d-flex flex-column gap-4">
+
+    <!-- ПОМОЩЬ И ДОКУМЕНТАЦИЯ -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-success text-white">
+        <i class="fas fa-book me-2"></i>Помощь и документация
+      </div>
+      <div class="list-group list-group-flush">
+        <a href="{% url 'public:docs' %}" class="list-group-item list-group-item-action">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-file-alt text-success me-3 fa-fw"></i>
+            <div>
+              <div class="fw-semibold">Документация</div>
+              <div class="text-muted small">Руководство пользователя и инструкции</div>
+            </div>
+          </div>
+        </a>
+        <a href="{% url 'public:faq' %}" class="list-group-item list-group-item-action">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-question-circle text-success me-3 fa-fw"></i>
+            <div>
+              <div class="fw-semibold">FAQ</div>
+              <div class="text-muted small">Ответы на часто задаваемые вопросы</div>
+            </div>
+          </div>
+        </a>
+        <a href="{% url 'public:contacts' %}" class="list-group-item list-group-item-action">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-envelope text-success me-3 fa-fw"></i>
+            <div>
+              <div class="fw-semibold">Обратная связь</div>
+              <div class="text-muted small">Форма обращения в колледж</div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ЗАКРЫТЫЙ РАЗДЕЛ -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-warning text-dark">
+        <i class="fas fa-lock me-2"></i>Закрытый раздел <span class="badge bg-dark ms-1">требуется вход</span>
+      </div>
+      <div class="list-group list-group-flush">
+        <div class="list-group-item text-muted">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-tachometer-alt me-3 fa-fw"></i>
+            <div>
+              <div class="fw-semibold">Панель управления</div>
+              <div class="small">Администрирование пользователей и данных</div>
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item text-muted">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-comments me-3 fa-fw"></i>
+            <div>
+              <div class="fw-semibold">Сообщения</div>
+              <div class="small">Переписка между сотрудниками и родителями</div>
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item text-muted">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-address-book me-3 fa-fw"></i>
+            <div>
+              <div class="fw-semibold">Сотрудники и родители</div>
+              <div class="small">Управление профилями и связями</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ПРАВОВЫЕ ДОКУМЕНТЫ -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-secondary text-white">
+        <i class="fas fa-gavel me-2"></i>Правовые документы
+      </div>
+      <div class="list-group list-group-flush">
+        <a href="{% url 'public:privacy' %}" class="list-group-item list-group-item-action">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-user-shield text-secondary me-3 fa-fw"></i>
+            <div>
+              <div class="fw-semibold">Политика ПДн</div>
+              <div class="text-muted small">Политика обработки персональных данных</div>
+            </div>
+          </div>
+        </a>
+        <a href="{% url 'public:terms' %}" class="list-group-item list-group-item-action">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-file-contract text-secondary me-3 fa-fw"></i>
+            <div>
+              <div class="fw-semibold">Пользовательское соглашение</div>
+              <div class="text-muted small">Условия использования портала</div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 {% endblock %}
