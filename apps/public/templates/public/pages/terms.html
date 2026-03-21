@@ -1,5 +1,86 @@
 {% extends "public/base_public.html" %}
 {% block public_content %}
-<h1>Пользовательское соглашение</h1>
-<p class="mb-0">Текст пользовательского соглашения (учебный проект).</p>
+
+<div class="row mb-4">
+  <div class="col-12">
+    <h1 class="mb-1">Пользовательское соглашение</h1>
+    <p class="text-muted">Условия использования портала взаимодействия сотрудников колледжа с родителями</p>
+    <hr>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+
+        <h5 class="mb-3">1. Общие положения</h5>
+        <p>Настоящее соглашение регулирует условия использования веб-портала взаимодействия
+        сотрудников ЧОУВО «МУ им. С.Ю. Витте» с родителями обучающихся (далее — Портал).
+        Использование Портала означает полное согласие с условиями настоящего соглашения.</p>
+
+        <h5 class="mt-4 mb-3">2. Назначение портала</h5>
+        <p>Портал предназначен для:</p>
+        <ul>
+          <li>организации информационного взаимодействия между родителями обучающихся и сотрудниками колледжа;</li>
+          <li>подачи и обработки обращений родителей;</li>
+          <li>обмена сообщениями между сотрудниками и родителями;</li>
+          <li>информирования о деятельности колледжа.</li>
+        </ul>
+
+        <h5 class="mt-4 mb-3">3. Права и обязанности пользователей</h5>
+        <p>Пользователь обязуется:</p>
+        <ul>
+          <li>предоставлять достоверные данные при регистрации и подаче обращений;</li>
+          <li>не передавать учётные данные третьим лицам;</li>
+          <li>не загружать файлы, содержащие вредоносный код или запрещённый контент;</li>
+          <li>использовать Портал исключительно в законных целях.</li>
+        </ul>
+
+        <h5 class="mt-4 mb-3">4. Ограничение ответственности</h5>
+        <p>Портал разработан в рамках выпускной квалификационной работы. Администрация не несёт
+        ответственности за временную недоступность сервиса в связи с техническими работами
+        или форс-мажорными обстоятельствами.</p>
+
+        <h5 class="mt-4 mb-3">5. Персональные данные</h5>
+        <p>Обработка персональных данных осуществляется в соответствии с
+        <a href="{% url 'public:privacy' %}">Политикой обработки персональных данных</a>
+        и требованиями ФЗ-152.</p>
+
+        <h5 class="mt-4 mb-3">6. Контактная информация</h5>
+        <p class="mb-0">По всем вопросам, связанным с использованием Портала, обращайтесь через
+        раздел <a href="{% url 'public:contacts' %}">«Обратная связь»</a>.</p>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-light">
+        <i class="fas fa-list text-primary me-2"></i>Содержание
+      </div>
+      <div class="card-body p-0">
+        <ul class="list-group list-group-flush small">
+          <li class="list-group-item"><a href="#" class="text-decoration-none">1. Общие положения</a></li>
+          <li class="list-group-item"><a href="#" class="text-decoration-none">2. Назначение портала</a></li>
+          <li class="list-group-item"><a href="#" class="text-decoration-none">3. Права и обязанности</a></li>
+          <li class="list-group-item"><a href="#" class="text-decoration-none">4. Ответственность</a></li>
+          <li class="list-group-item"><a href="#" class="text-decoration-none">5. Персональные данные</a></li>
+          <li class="list-group-item"><a href="#" class="text-decoration-none">6. Контакты</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mt-3">
+      <div class="card-body text-center small text-muted">
+        <i class="fas fa-calendar-alt mb-2 d-block text-secondary fa-lg"></i>
+        Соглашение действует с момента начала использования Портала.
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
