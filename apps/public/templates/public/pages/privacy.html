@@ -1,5 +1,86 @@
 {% extends "public/base_public.html" %}
 {% block public_content %}
-<h1>Политика обработки ПДн</h1>
-<p class="mb-0">Текст политики обработки персональных данных (учебный проект).</p>
+
+<div class="row mb-4">
+  <div class="col-12">
+    <h1 class="mb-1">Политика обработки персональных данных</h1>
+    <p class="text-muted">ЧОУВО «Московский университет имени С.Ю. Витте»</p>
+    <hr>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body">
+        <h5 class="mb-3"><i class="fas fa-shield-alt text-primary me-2"></i>Основные положения</h5>
+        <p>Настоящий портал разработан в рамках выпускной квалификационной работы и функционирует
+        на базе инфраструктуры ЧОУВО «МУ им. С.Ю. Витте». Обработка персональных данных
+        осуществляется в соответствии с Федеральным законом № 152-ФЗ «О персональных данных».</p>
+
+        <h6 class="mt-4 mb-2">Какие данные собираются</h6>
+        <ul>
+          <li>ФИО пользователя</li>
+          <li>Адрес электронной почты</li>
+          <li>Номер телефона (опционально)</li>
+          <li>Текст обращений и прикреплённые файлы</li>
+        </ul>
+
+        <h6 class="mt-4 mb-2">Цели обработки</h6>
+        <ul>
+          <li>Обеспечение взаимодействия родителей обучающихся с сотрудниками колледжа</li>
+          <li>Обработка обращений и ответы на них</li>
+          <li>Идентификация пользователей в системе</li>
+        </ul>
+
+        <h6 class="mt-4 mb-2">Хранение и защита</h6>
+        <ul>
+          <li>Пароли хранятся в зашифрованном виде (алгоритм PBKDF2)</li>
+          <li>Передача данных осуществляется по защищённому протоколу HTTPS</li>
+          <li>Доступ к данным разграничен по ролям пользователей</li>
+          <li>Файлы вложений хранятся на сервере с ограниченным доступом</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h5 class="mb-3"><i class="fas fa-file-pdf text-danger me-2"></i>Официальный документ университета</h5>
+        <p class="text-muted">Полный текст Политики в отношении обработки персональных данных
+        ЧОУВО «МУ им. С.Ю. Витте» (утверждена 16.05.2025):</p>
+        <a href="https://www.muiv.ru/upload/documents/privacy-policy.pdf"
+           target="_blank" class="btn btn-outline-danger">
+          <i class="fas fa-download me-2"></i>Скачать PDF
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-md-4">
+    <div class="card border-warning border-2 bg-warning bg-opacity-10">
+      <div class="card-body">
+        <h6 class="mb-2"><i class="fas fa-info-circle text-warning me-2"></i>Права субъекта данных</h6>
+        <ul class="small text-muted mb-0">
+          <li class="mb-1">Получить информацию об обрабатываемых данных</li>
+          <li class="mb-1">Потребовать уточнения или удаления данных</li>
+          <li class="mb-1">Отозвать согласие на обработку ПДн</li>
+          <li>Обратиться в Роскомнадзор при нарушении прав</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mt-3">
+      <div class="card-body text-center">
+        <i class="fas fa-envelope fa-2x text-primary mb-2"></i>
+        <p class="small text-muted mb-2">По вопросам обработки ПДн обращайтесь:</p>
+        <a href="{% url 'public:contacts' %}" class="btn btn-sm btn-primary">
+          Написать обращение
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
