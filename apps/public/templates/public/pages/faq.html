@@ -1,6 +1,195 @@
 {% extends "public/base_public.html" %}
 {% block public_content %}
-<h1>FAQ</h1>
-<p><b>Вопрос:</b> Как отправить обращение?</p>
-<p class="mb-0"><b>Ответ:</b> Перейдите в «Обратная связь», заполните форму и при необходимости приложите файл.</p>
+
+<div class="row mb-4">
+  <div class="col-12">
+    <h1 class="mb-1">Вопросы и ответы</h1>
+    <p class="text-muted">Часто задаваемые вопросы о работе портала</p>
+    <hr>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-10 mx-auto">
+
+    <!-- РАЗДЕЛ 1: РОДИТЕЛЯМ -->
+    <h5 class="mb-3"><i class="fas fa-user-friends text-success me-2"></i>Родителям</h5>
+    <div class="accordion mb-4" id="faqParents">
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#p1">
+            Как подать обращение в колледж?
+          </button>
+        </h2>
+        <div id="p1" class="accordion-collapse collapse show" data-bs-parent="#faqParents">
+          <div class="accordion-body text-muted">
+            Перейдите в раздел <strong>«Обратная связь»</strong> на главной странице портала.
+            Заполните форму: укажите имя, контактный email, тему и текст обращения.
+            При необходимости приложите файл (до 5 МБ). После отправки вам будет присвоен
+            номер обращения в формате <code>FB-ГГГГ-XXXXXX</code> — сохраните его для отслеживания.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#p2">
+            Нужна ли регистрация для подачи обращения?
+          </button>
+        </h2>
+        <div id="p2" class="accordion-collapse collapse" data-bs-parent="#faqParents">
+          <div class="accordion-body text-muted">
+            Нет. Форма обратной связи доступна без регистрации и авторизации.
+            Для переписки с конкретным сотрудником и просмотра истории обращений
+            потребуется учётная запись — обратитесь к администратору колледжа для её создания.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#p3">
+            Как узнать статус моего обращения?
+          </button>
+        </h2>
+        <div id="p3" class="accordion-collapse collapse" data-bs-parent="#faqParents">
+          <div class="accordion-body text-muted">
+            Статус обращения обновляется сотрудником колледжа в системе.
+            Если у вас есть учётная запись — войдите в личный кабинет и перейдите
+            в раздел «Сообщения». Без учётной записи уточните статус по номеру обращения,
+            связавшись с колледжем по контактам, указанным в разделе <a href="/contacts/">«Контакты»</a>.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#p4">
+            Какие файлы можно прикладывать к обращению?
+          </button>
+        </h2>
+        <div id="p4" class="accordion-collapse collapse" data-bs-parent="#faqParents">
+          <div class="accordion-body text-muted">
+            Принимаются файлы размером до <strong>5 МБ</strong>: документы (PDF, DOC, DOCX),
+            изображения (JPG, PNG), таблицы (XLS, XLSX). Файл прикладывается при заполнении
+            формы обратной связи и сохраняется в базе данных системы.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- РАЗДЕЛ 2: СОТРУДНИКАМ -->
+    <h5 class="mb-3"><i class="fas fa-user-tie text-primary me-2"></i>Сотрудникам</h5>
+    <div class="accordion mb-4" id="faqStaff">
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#s1">
+            Как войти в личный кабинет?
+          </button>
+        </h2>
+        <div id="s1" class="accordion-collapse collapse" data-bs-parent="#faqStaff">
+          <div class="accordion-body text-muted">
+            Перейдите по ссылке <a href="/login/">«Войти»</a> в верхнем меню портала.
+            Введите логин и пароль, выданные администратором. При первом входе
+            рекомендуется сменить пароль в настройках профиля.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#s2">
+            Как обработать обращение родителя?
+          </button>
+        </h2>
+        <div id="s2" class="accordion-collapse collapse" data-bs-parent="#faqStaff">
+          <div class="accordion-body text-muted">
+            В личном кабинете перейдите в раздел <strong>«Обращения родителей»</strong>.
+            Выберите обращение из списка — откроется карточка с подробной информацией.
+            Прочитайте текст, при необходимости скачайте вложение. Измените статус обращения
+            (Новое → В работе → Закрыто) и при необходимости свяжитесь с родителем
+            через раздел «Сообщения».
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#s3">
+            Как написать сообщение родителю?
+          </button>
+        </h2>
+        <div id="s3" class="accordion-collapse collapse" data-bs-parent="#faqStaff">
+          <div class="accordion-body text-muted">
+            Перейдите в раздел <strong>«Сообщения»</strong> личного кабинета.
+            В левой панели выберите контакт из списка зарегистрированных родителей.
+            Введите текст в поле внизу и нажмите «Отправить». История переписки
+            сохраняется автоматически.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- РАЗДЕЛ 3: ТЕХНИЧЕСКИЕ ВОПРОСЫ -->
+    <h5 class="mb-3"><i class="fas fa-cog text-secondary me-2"></i>Технические вопросы</h5>
+    <div class="accordion mb-4" id="faqTech">
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#t1">
+            Забыл пароль — что делать?
+          </button>
+        </h2>
+        <div id="t1" class="accordion-collapse collapse" data-bs-parent="#faqTech">
+          <div class="accordion-body text-muted">
+            Обратитесь к администратору системы для сброса пароля.
+            Контакты администратора указаны в разделе <a href="/contacts/">«Контакты»</a>.
+            Самостоятельный сброс пароля по email в текущей версии системы не предусмотрен.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#t2">
+            В каких браузерах работает портал?
+          </button>
+        </h2>
+        <div id="t2" class="accordion-collapse collapse" data-bs-parent="#faqTech">
+          <div class="accordion-body text-muted">
+            Портал корректно работает в актуальных версиях браузеров:
+            Google Chrome, Mozilla Firefox, Microsoft Edge, Safari.
+            Рекомендуется использовать последние версии браузеров.
+            Поддержка Internet Explorer не предусмотрена.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#t3">
+            Как защищены мои персональные данные?
+          </button>
+        </h2>
+        <div id="t3" class="accordion-collapse collapse" data-bs-parent="#faqTech">
+          <div class="accordion-body text-muted">
+            Обработка персональных данных осуществляется в соответствии с
+            <a href="https://www.muiv.ru/upload/documents/privacy-policy.pdf" target="_blank">
+              Политикой ЧОУВО «МУ им. С.Ю. Витте» в отношении обработки ПДн
+            </a>
+            и требованиями Федерального закона № 152-ФЗ «О персональных данных».
+            Пароли хранятся в зашифрованном виде. Передача данных осуществляется по защищённому протоколу.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
 {% endblock %}
