@@ -1,5 +1,193 @@
 {% extends "public/base_public.html" %}
 {% block public_content %}
-<h1>Документация</h1>
-<p class="mb-0">Здесь размещается описание модулей, диаграмм и сценариев использования.</p>
+
+<div class="row mb-4">
+  <div class="col-12">
+    <h1 class="mb-1">Документы</h1>
+    <p class="text-muted">Нормативные и организационные документы ЧОУВО «МУ им. С.Ю. Витте»</p>
+    <hr>
+  </div>
+</div>
+
+<!-- ВСЕ ДОКУМЕНТЫ — ГЛАВНАЯ ССЫЛКА -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card border-primary border-2 bg-primary bg-opacity-10">
+      <div class="card-body d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div>
+          <h5 class="mb-1">
+            <i class="fas fa-folder-open text-primary me-2"></i>Все документы университета
+          </h5>
+          <p class="text-muted mb-0 small">
+            Полный реестр нормативных документов ЧОУВО «МУ им. С.Ю. Витте»:
+            положения, регламенты, приказы, локальные акты.
+          </p>
+        </div>
+        <a href="https://www.muiv.ru/sveden/document/"
+           target="_blank" class="btn btn-primary">
+          <i class="fas fa-external-link-alt me-1"></i>Перейти в раздел документов
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- УСТАВ И ЛИЦЕНЗИИ -->
+<div class="row mb-4">
+  <div class="col-12">
+    <h5 class="mb-3"><i class="fas fa-university text-primary me-2"></i>Устав, лицензия и аккредитация</h5>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h6 class="card-title"><i class="fas fa-file-alt text-danger me-2"></i>Устав МУИВ</h6>
+        <p class="text-muted small flex-grow-1">Устав ЧОУВО «МУ им. С.Ю. Витте» от 04.10.2023</p>
+        <a href="https://www.muiv.ru/upload/iblock/b7d/rbqy2nb31pipjkzf5rxljbza0hmh6yfa/Ustav-MUIV-ot-04.10.2023.pdf"
+           target="_blank" class="btn btn-sm btn-outline-danger mt-2">
+          <i class="fas fa-file-pdf me-1"></i>Открыть PDF
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h6 class="card-title"><i class="fas fa-certificate text-warning me-2"></i>Лицензия на образовательную деятельность</h6>
+        <p class="text-muted small flex-grow-1">Лицензия на право ведения образовательной деятельности</p>
+        <a href="https://www.muiv.ru/upload/iblock/86d/86d59871ad3033b725febb2092771971.pdf"
+           target="_blank" class="btn btn-sm btn-outline-warning mt-2">
+          <i class="fas fa-file-pdf me-1"></i>Открыть PDF
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h6 class="card-title"><i class="fas fa-list-alt text-info me-2"></i>Реестровая выписка</h6>
+        <p class="text-muted small flex-grow-1">Выписка из реестра лицензий на образовательную деятельность</p>
+        <a href="https://www.muiv.ru/upload/iblock/f30/ujna0x70anubq9c7jq80hlcgc2hh16zu/Reestrovaya-vypiska-_6_-_1_.pdf"
+           target="_blank" class="btn btn-sm btn-outline-info mt-2">
+          <i class="fas fa-file-pdf me-1"></i>Открыть PDF
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- УЧЕБНЫЙ ПРОЦЕСС СПО -->
+<div class="row mb-4">
+  <div class="col-12">
+    <h5 class="mb-3"><i class="fas fa-graduation-cap text-success me-2"></i>Учебный процесс колледжа (СПО)</h5>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h6 class="card-title"><i class="fas fa-calendar-alt text-success me-2"></i>Расписание занятий</h6>
+        <p class="text-muted small flex-grow-1">Актуальное расписание занятий студентов колледжа</p>
+        <a href="https://www.muiv.ru/studentu/spo/raspisanie/"
+           target="_blank" class="btn btn-sm btn-outline-success mt-2">
+          <i class="fas fa-external-link-alt me-1"></i>Перейти
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h6 class="card-title"><i class="fas fa-newspaper text-primary me-2"></i>Новости колледжа</h6>
+        <p class="text-muted small flex-grow-1">Актуальные новости и объявления колледжа МУИВ</p>
+        <a href="https://www.muiv.ru/studentu/spo/news/"
+           target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+          <i class="fas fa-external-link-alt me-1"></i>Перейти
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h6 class="card-title"><i class="fas fa-file-signature text-secondary me-2"></i>Образцы заявлений</h6>
+        <p class="text-muted small flex-grow-1">Шаблоны заявлений для обучающихся колледжа</p>
+        <a href="https://www.muiv.ru/studentu/spo/sample/"
+           target="_blank" class="btn btn-sm btn-outline-secondary mt-2">
+          <i class="fas fa-external-link-alt me-1"></i>Перейти
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- АТТЕСТАЦИЯ -->
+<div class="row mb-4">
+  <div class="col-12">
+    <h5 class="mb-3"><i class="fas fa-clipboard-check text-warning me-2"></i>Аттестация</h5>
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h6 class="card-title"><i class="fas fa-tasks text-warning me-2"></i>Положение о промежуточной аттестации</h6>
+        <p class="text-muted small flex-grow-1">Порядок проведения промежуточной аттестации по программам СПО</p>
+        <a href="https://www.muiv.ru/upload/iblock/80a/k508pj3mlfbsobxtgmlzjbp0dx5mdybr/Polozhenie-o-promezhut.attestatsii-po-progr.SPO.pdf"
+           target="_blank" class="btn btn-sm btn-outline-warning mt-2">
+          <i class="fas fa-file-pdf me-1"></i>Открыть PDF
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h6 class="card-title"><i class="fas fa-laptop text-info me-2"></i>Порядок проведения ГИА с ДОТ</h6>
+        <p class="text-muted small flex-grow-1">Порядок проведения государственной итоговой аттестации с применением дистанционных технологий</p>
+        <a href="https://www.muiv.ru/upload/iblock/06c/qxz05h29mxw5yqskhg52rwrcwp3hh52m/Poryadok-provedeniya-GIA-s-DOT-po-programmam-SPO.pdf"
+           target="_blank" class="btn btn-sm btn-outline-info mt-2">
+          <i class="fas fa-file-pdf me-1"></i>Открыть PDF
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ПЕРСОНАЛЬНЫЕ ДАННЫЕ -->
+<div class="row">
+  <div class="col-12">
+    <h5 class="mb-3"><i class="fas fa-shield-alt text-danger me-2"></i>Защита персональных данных</h5>
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h6 class="card-title"><i class="fas fa-lock text-danger me-2"></i>Политика обработки ПДн</h6>
+        <p class="text-muted small flex-grow-1">Политика ЧОУВО «МУ им. С.Ю. Витте» в отношении обработки персональных данных в соответствии с ФЗ-152.</p>
+        <a href="https://www.muiv.ru/upload/documents/privacy-policy.pdf"
+           target="_blank" class="btn btn-sm btn-outline-danger mt-2">
+          <i class="fas fa-file-pdf me-1"></i>Открыть PDF
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h6 class="card-title"><i class="fas fa-child text-warning me-2"></i>Защита детей от вредной информации</h6>
+        <p class="text-muted small flex-grow-1">Положение о мерах по защите детей от информации, причиняющей вред их здоровью и развитию.</p>
+        <a href="https://www.muiv.ru/upload/iblock/458/Polozhenie-o-zashchite-detey-ot-informatsii.pdf"
+           target="_blank" class="btn btn-sm btn-outline-warning mt-2">
+          <i class="fas fa-file-pdf me-1"></i>Открыть PDF
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
