@@ -11,7 +11,7 @@
   - Обработка ошибок
 
 РОЛИ ПОЛЬЗОВАТЕЛЕЙ:
-  1. Администратор (administrator) - полный доступ к системе
+  1. Администратор (admin) - полный доступ к системе
   2. Сотрудник (staff) - доступ к студентам и сообщениям
   3. Родитель (parent) - доступ только к информации о своём ребёнке
   4. Гость (guest) - нет доступа (перенаправление на login)
@@ -34,6 +34,9 @@ from apps.communications.models import User, Message, Report
 from apps.students.models import Student
 from apps.employees.models import Employee
 from apps.parents.models import Parent
+from django.contrib.sessions.models import Session
+from django.utils import timezone
+from apps.public.models import Feedback
 
 
 # ==============================================================================
@@ -156,80 +159,33 @@ def logout_view(request):
 
 @login_required(login_url='core:login')
 def dashboard(request):
-    """
-    ENDPOINT: GET /dashboard/
-    ОПИСАНИЕ: Главный дашборд пользователя (версия зависит от роли)
-    
-    ТРЕБУЕТ:
-      - Пользователь должен быть авторизован
-    
-    РОЛЕВАЯ ЛОГИКА:
-      1. АДМИНИСТРАТОР (administrator):
-         - Видит статистику по всем пользователям
-         - Видит список всех пользователей системы
-         - Видит количество сообщений и активных сессий
-      
-      2. СОТРУДНИК (staff):
-         - Видит список назначенных студентов
-         - Видит непрочитанные сообщения
-         - Видит отчёты за текущий день
-         - Видит последние сообщения в чате
-      
-      3. РОДИТЕЛЬ (parent):
-         - Видит информацию о своём ребёнке
-         - Видит оценки (GPA), группу, специальность
-         - Видит непрочитанные сообщения от сотрудников
-         - Видит последние сообщения в чате
-      
-      4. ГОСТЬ (guest):
-         - Видит базовый дашборд родителя
-    
-    ПАРАМЕТРЫ:
-      request (HttpRequest): Объект запроса
-    
-    ПРИМЕРЫ КОНТЕКСТА (для админа):
-      {
-        'user': <User: admin>,
-        'role': 'administrator',
-        'users_count': 150,
-        'messages_count': 2340,
-        'active_sessions': 42,
-        'users': [<User: student1>, <User: staff1>, ...]
-      }
-    
-    ВОЗВРАЩАЕТ:
-      HttpResponse: Рендер соответствующего шаблона дашборда
-    """
-    
     user = request.user
     role = getattr(user, 'role', 'guest')
-    
-    # Базовый контекст для всех ролей
     context = {'user': user, 'role': role}
-    
+
     # ⭐ ДАШБОРД АДМИНИСТРАТОРА
     if role == 'admin':
         context.update({
             'users_count': User.objects.count(),
             'messages_count': Message.objects.count(),
             'reports_count': Report.objects.count(),
-            'active_sessions': User.objects.filter(last_login__isnull=False).count(),
+            'active_sessions': Session.objects.filter(expire_date__gte=timezone.now()).count(),
+            'pending_feedback': Feedback.objects.filter(status=Feedback.STATUS_NEW).count(),
             'users': User.objects.all()[:50],
         })
         context['breadcrumbs'] = [
             {'title': 'Главная', 'url': '/', 'icon': 'fas fa-home'},
             {'title': 'Панель управления', 'url': None, 'icon': 'fas fa-tachometer-alt'},
         ]
-
         return render(request, 'dashboard/admin.html', context)
-    
+
     # ⭐ ДАШБОРД СОТРУДНИКА
     elif role == 'employee':
         try:
             employee = Employee.objects.get(user=user)
         except Employee.DoesNotExist:
             employee = None
-        
+
         context.update({
             'employee': employee,
             'unread_messages': Message.objects.filter(recipient=user, is_read=False).count(),
@@ -243,23 +199,22 @@ def dashboard(request):
             {'title': 'Главная', 'url': '/', 'icon': 'fas fa-home'},
             {'title': 'Панель управления', 'url': None, 'icon': 'fas fa-tachometer-alt'},
         ]
-        
         return render(request, 'dashboard/staff.html', context)
-    
+
     # ⭐ ДАШБОРД РОДИТЕЛЯ
     elif role == 'parent':
         try:
             parent = Parent.objects.get(user=user)
         except Parent.DoesNotExist:
             parent = None
-        
+
         student = None
         if parent:
             try:
                 student = Student.objects.get(parent=parent)
             except Student.DoesNotExist:
                 student = None
-        
+
         context.update({
             'parent': parent,
             'student_name': student.full_name if student else 'Не привязан',
@@ -274,15 +229,16 @@ def dashboard(request):
             {'title': 'Главная', 'url': '/', 'icon': 'fas fa-home'},
             {'title': 'Панель управления', 'url': None, 'icon': 'fas fa-tachometer-alt'},
         ]
-        
         return render(request, 'dashboard/parent.html', context)
-    
-    # ⭐ ДАШБОРД ДЛЯ ГОСТЕЙ
+
+    # ⭐ ГОСТЬ — fallback
+    else:
         context['breadcrumbs'] = [
             {'title': 'Главная', 'url': '/', 'icon': 'fas fa-home'},
             {'title': 'Панель управления', 'url': None, 'icon': 'fas fa-tachometer-alt'},
         ]
-    return render(request, 'dashboard/parent.html', context)
+        return render(request, 'dashboard/parent.html', context)
+
 
 
 # ==============================================================================
