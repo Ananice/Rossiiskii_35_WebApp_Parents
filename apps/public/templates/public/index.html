@@ -4,7 +4,87 @@
 {% block title %}Главная{% endblock %}
 
 {% block public_content %}
-<h1>Портал взаимодействия</h1>
-<p>Учебный проект: веб‑приложение для взаимодействия сотрудников колледжа с родителями обучающихся.</p>
-<p><a href="{% url 'public:about' %}">О проекте</a></p>
+
+<div class="row mb-4">
+  <div class="col-12">
+    <h1 class="mb-1">Портал взаимодействия колледжа с родителями</h1>
+    <p class="text-muted mb-0">
+      ЧОУВО «МУ им. С.Ю. Витте» — цифровой канал оперативного общения
+      сотрудников колледжа с родителями обучающихся.
+    </p>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body text-center py-4">
+        <i class="fas fa-envelope fa-2x text-primary mb-3"></i>
+        <h5 class="card-title">Обращения родителей</h5>
+        <p class="card-text text-muted small">
+          Родители отправляют обращения через публичную форму без регистрации.
+          Сотрудники обрабатывают их в личном кабинете.
+        </p>
+        <a href="{% url 'public:contacts' %}" class="btn btn-outline-primary btn-sm">Подать обращение</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body text-center py-4">
+        <i class="fas fa-comments fa-2x text-success mb-3"></i>
+        <h5 class="card-title">Система сообщений</h5>
+        <p class="card-text text-muted small">
+          Внутренний чат между сотрудниками и зарегистрированными родителями
+          с историей переписки в личном кабинете.
+        </p>
+        <a href="{% url 'core:login' %}" class="btn btn-outline-success btn-sm">Войти в портал</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body text-center py-4">
+        <i class="fas fa-newspaper fa-2x text-warning mb-3"></i>
+        <h5 class="card-title">Новости колледжа</h5>
+        <p class="card-text text-muted small">
+          Актуальные новости и объявления публикуются сотрудниками
+          и доступны без авторизации.
+        </p>
+        <a href="{% url 'public:news' %}" class="btn btn-outline-warning btn-sm">Читать новости</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h6 class="text-muted text-uppercase mb-2" style="font-size:.75rem; letter-spacing:.05em;">О портале</h6>
+        <p class="mb-0 small">
+          Портал разработан в рамках выпускной квалификационной работы
+          студента Российского Даниила Ильича (ЧОУВО «МУ им. С.Ю. Витте», 2025–2026).
+          Система обеспечивает прозрачное и оперативное взаимодействие между
+          сотрудниками колледжа и родителями обучающихся.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h6 class="text-muted text-uppercase mb-2" style="font-size:.75rem; letter-spacing:.05em;">Быстрая навигация</h6>
+        <ul class="list-unstyled mb-0 small">
+          <li><a href="{% url 'public:about' %}">→ О проекте</a></li>
+          <li><a href="{% url 'public:features' %}">→ Возможности системы</a></li>
+          <li><a href="{% url 'public:roles' %}">→ Роли пользователей</a></li>
+          <li><a href="{% url 'public:faq' %}">→ Часто задаваемые вопросы</a></li>
+          <li><a href="{% url 'public:docs' %}">→ Документация</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
