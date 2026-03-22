@@ -1,187 +1,126 @@
 {% extends 'base/base.html' %}
-
 {% load static %}
 
-{% block title %}Личный кабинет родителя - МУИВ{% endblock %}
+{% block title %}Личный кабинет — МУИВ{% endblock %}
 
 {% block content %}
 
-<!-- ===================== ЗАГОЛОВОК ===================== -->
 <div class="row mb-4">
-    <div class="col-md-12">
-        <h1 class="mb-0">
-            <i class="fas fa-home text-success"></i> Личный кабинет
-        </h1>
-        <!-- text-success = зелёный текст -->
-        
-        <small class="text-muted">Информация о вашем ребёнке и общение со школой</small>
-    </div>
+  <div class="col">
+    <h4 class="mb-0">
+      <i class="fas fa-home text-success me-2"></i>Личный кабинет
+    </h4>
+    <small class="text-muted">
+      Добро пожаловать, {{ user.get_full_name|default:user.username }}!
+    </small>
+  </div>
 </div>
 
-<!-- ===================== ИНФОРМАЦИЯ О СТУДЕНТЕ ===================== -->
-<!-- Основные данные о ребёнке и быстрая ссылка на сообщения -->
+{# Информация о студенте + счётчик сообщений #}
 <div class="row mb-4">
-    
-    <!-- ЛЕВАЯ ЧАСТЬ: ИНФОРМАЦИЯ -->
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-light">
-                <h5 class="mb-0">
-                    <i class="fas fa-user-graduate"></i> Информация о студенте
-                </h5>
-            </div>
 
-            <div class="card-body">
-                <!-- ДАННЫЕ В 2 КОЛОНКИ -->
-                <div class="row">
-                    
-                    <!-- ЛЕВАЯ КОЛОНКА -->
-                    <div class="col-md-6">
-                        <p><strong>ФИ:</strong> {{ student_name }}</p>
-                        <p><strong>Группа:</strong> {{ student_group }}</p>
-                        <p><strong>Специальность:</strong> {{ student_specialty }}</p>
-                    </div>
-
-                    <!-- ПРАВАЯ КОЛОНКА -->
-                    <div class="col-md-6">
-                        <p><strong>Номер зачётной книжки:</strong> {{ student_id }}</p>
-                        <p><strong>Статус:</strong> 
-                            <span class="badge bg-success">Обучается</span>
-                        </p>
-                        <p><strong>Средний балл:</strong> {{ gpa }}/5.0</p>
-                    </div>
-                </div>
-            </div>
+  <div class="col-md-8">
+    <div class="card shadow-sm h-100">
+      <div class="card-header bg-light">
+        <h6 class="mb-0">
+          <i class="fas fa-user-graduate me-1"></i>Информация о студенте
+        </h6>
+      </div>
+      <div class="card-body">
+        {% if student_name != 'Не привязан' %}
+        <div class="row">
+          <div class="col-md-6">
+            <p class="mb-2"><strong>ФИО:</strong> {{ student_name }}</p>
+            <p class="mb-2"><strong>Группа:</strong> {{ student_group }}</p>
+            <p class="mb-2"><strong>Специальность:</strong> {{ student_specialty }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="mb-2">
+              <strong>Номер зачётной книжки:</strong> {{ student_id }}
+            </p>
+            <p class="mb-2">
+              <strong>Средний балл:</strong>
+              {% if gpa != '-' %}
+                <span class="badge bg-success fs-6">{{ gpa }} / 5.0</span>
+              {% else %}
+                <span class="text-muted">Не указан</span>
+              {% endif %}
+            </p>
+            <p class="mb-0">
+              <strong>Статус:</strong>
+              <span class="badge bg-success">Обучается</span>
+            </p>
+          </div>
         </div>
-    </div>
-
-    <!-- ПРАВАЯ ЧАСТЬ: НЕПРОЧИТАННЫЕ СООБЩЕНИЯ -->
-    <div class="col-md-4">
-        <div class="card border-info">
-            <!-- border-info = голубая граница -->
-            
-            <div class="card-body text-center">
-                <h3 class="text-info mb-2">{{ unread_messages }}</h3>
-                <p class="mb-0 text-muted">Непрочитанных сообщений</p>
-                
-                <!-- КНОПКА ЧИТАТЬ -->
-                <a href="/messages/" class="btn btn-sm btn-info mt-2">
-                    <!-- mt-2 = отступ сверху -->
-                    
-                    <i class="fas fa-envelope"></i> Читать
-                </a>
-            </div>
+        {% else %}
+        <div class="text-center text-muted py-3">
+          <i class="fas fa-user-slash fa-2x mb-2 d-block opacity-25"></i>
+          Студент не привязан к вашему аккаунту.<br>
+          <small>Обратитесь к сотруднику колледжа.</small>
         </div>
+        {% endif %}
+      </div>
     </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card shadow-sm border-info h-100">
+      <div class="card-body text-center d-flex flex-column justify-content-center">
+        <h2 class="text-info fw-bold mb-1">{{ unread_messages }}</h2>
+        <p class="text-muted small mb-3">Непрочитанных сообщений</p>
+        <a href="{% url 'core:messages' %}" class="btn btn-info btn-sm">
+          <i class="fas fa-envelope me-1"></i>Читать сообщения
+        </a>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<!-- ===================== ТАБЛИЦА УСПЕВАЕМОСТИ ===================== -->
-<!-- Оценки по всем предметам -->
-<div class="row mb-4">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header bg-light">
-                <h5 class="mb-0">
-                    <i class="fas fa-chart-bar"></i> Успеваемость по предметам
-                </h5>
-            </div>
+{# Последние сообщения от колледжа #}
+<div class="card shadow-sm">
+  <div class="card-header bg-light d-flex justify-content-between align-items-center">
+    <h6 class="mb-0">
+      <i class="fas fa-bell me-1"></i>Сообщения от колледжа
+    </h6>
+    <a href="{% url 'core:messages' %}" class="btn btn-outline-primary btn-sm">
+      Все сообщения
+    </a>
+  </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    
-                    <!-- ШАПКА ТАБЛИЦЫ -->
-                    <thead class="table-light">
-                        <tr>
-                            <th>Предмет</th>
-                            <th>Преподаватель</th>
-                            <th>Баллы</th>
-                            <th>Оценка</th>
-                            <th>Статус</th>
-                        </tr>
-                    </thead>
-
-                    <!-- ТЕЛО ТАБЛИЦЫ -->
-                    <tbody>
-                        
-                        <!-- ПРЕДМЕТ 1 -->
-                        <tr>
-                            <td>Информатика</td>
-                            <td>Иван Иванов</td>
-                            <td>95/100</td>
-                            <td><span class="badge bg-success">5</span></td>
-                            <td><span class="badge bg-info">Сдано</span></td>
-                        </tr>
-
-                        <!-- ПРЕДМЕТ 2 -->
-                        <tr>
-                            <td>Математика</td>
-                            <td>Мария Сергеевна</td>
-                            <td>78/100</td>
-                            <td><span class="badge bg-warning">4</span></td>
-                            <td><span class="badge bg-info">Сдано</span></td>
-                        </tr>
-
-                        <!-- ПРЕДМЕТ 3 -->
-                        <tr>
-                            <td>История</td>
-                            <td>Петр Петрович</td>
-                            <td>88/100</td>
-                            <td><span class="badge bg-success">5</span></td>
-                            <td><span class="badge bg-warning">На проверке</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+  <div class="list-group list-group-flush">
+    {% for message in recent_messages %}
+    <a href="{% url 'core:messages' %}" class="list-group-item list-group-item-action">
+      <div class="d-flex w-100 justify-content-between align-items-start">
+        <div>
+          <strong class="small">
+            {{ message.sender.get_full_name|default:message.sender.username }}
+          </strong>
+          {% if not message.is_read %}
+            <span class="badge bg-primary ms-1" style="font-size:.65rem;">Новое</span>
+          {% endif %}
         </div>
+        <small class="text-muted text-nowrap ms-2">
+          {{ message.created_at|date:"d.m.Y H:i" }}
+        </small>
+      </div>
+      <p class="mb-0 small text-muted text-truncate">
+        {{ message.content|truncatewords:20 }}
+      </p>
+    </a>
+    {% empty %}
+    <div class="list-group-item text-center text-muted py-4">
+      <i class="fas fa-inbox fa-2x mb-2 d-block opacity-25"></i>
+      Сообщений пока нет
     </div>
-</div>
+    {% endfor %}
+  </div>
 
-<!-- ===================== СООБЩЕНИЯ ОТ ШКОЛЫ ===================== -->
-<!-- Последние уведомления -->
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header bg-light">
-                <h5 class="mb-0">
-                    <i class="fas fa-bell"></i> Сообщения от школы
-                </h5>
-            </div>
-
-            <!-- СПИСОК СООБЩЕНИЙ -->
-            <div class="list-group list-group-flush">
-                {% for message in recent_messages %}
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <!-- СТРОКА: ИМЯ + ДАТА -->
-                        <div class="d-flex w-100 justify-content-between">
-                            <strong>{{ message.sender.get_full_name }}</strong>
-                            <small class="text-muted">{{ message.created_at|date:"d.m.Y H:i" }}</small>
-                            <!-- H:i = время 14:30 -->
-                        </div>
-
-                        <!-- ТЕКСТ СООБЩЕНИЯ (ПЕРВЫЕ 20 СЛОВ) -->
-                        <p class="mb-1">{{ message.content|truncatewords:20 }}</p>
-                        <!-- |truncatewords:20 = обрезать на 20 словах -->
-
-                        <!-- ЗНАЧОК "НОВОЕ" (если не прочитано) -->
-                        {% if not message.is_read %}
-                            <small><span class="badge bg-primary">Новое</span></small>
-                        {% endif %}
-                    </a>
-                {% empty %}
-                    <div class="list-group-item text-center text-muted py-3">
-                        Нет сообщений
-                    </div>
-                {% endfor %}
-            </div>
-
-            <!-- КНОПКА НАПИСАТЬ ПРЕПОДАВАТЕЛЮ -->
-            <div class="card-footer bg-light">
-                <a href="/messages/" class="btn btn-sm btn-primary">
-                    <i class="fas fa-comment-dots"></i> Написать преподавателю
-                </a>
-            </div>
-        </div>
-    </div>
+  <div class="card-footer bg-light">
+    <a href="{% url 'core:messages' %}" class="btn btn-primary btn-sm">
+      <i class="fas fa-comment-dots me-1"></i>Написать сотруднику
+    </a>
+  </div>
 </div>
 
 {% endblock %}
