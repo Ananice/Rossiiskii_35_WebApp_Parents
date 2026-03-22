@@ -1,0 +1,123 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Расписание — {{ employee.get_full_name }}{% endblock %}
+
+{% block content %}
+
+<div class="row mb-3">
+  <div class="col">
+    <h4 class="mb-0">
+      <i class="fas fa-calendar-alt text-primary me-2"></i>
+      Расписание сотрудника
+    </h4>
+    <small class="text-muted">{{ employee.get_full_name }} — {{ employee.position }}</small>
+  </div>
+  <div class="col-auto">
+    <a href="{% url 'employees:employee_detail' employee.pk %}" class="btn btn-sm btn-outline-secondary">
+      <i class="fas fa-arrow-left me-1"></i>Назад
+    </a>
+  </div>
+</div>
+
+{% if schedule %}
+
+  {# Время консультаций #}
+  {% if schedule.consultation_hours %}
+  <div class="alert alert-info mb-4">
+    <i class="fas fa-comments me-2"></i>
+    <strong>Время консультаций с родителями:</strong> {{ schedule.consultation_hours }}
+  </div>
+  {% endif %}
+
+  {# Таблица расписания #}
+  <div class="card shadow-sm">
+    <div class="card-header bg-light">
+      <h6 class="mb-0"><i class="fas fa-clock me-1"></i>Рабочие часы по дням</h6>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>День недели</th>
+            <th>Начало</th>
+            <th>Конец</th>
+            <th>Статус</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {% with days=schedule %}
+          <tr>
+            <td><i class="fas fa-circle text-success me-1" style="font-size:.6rem;"></i>Понедельник</td>
+            <td>{{ schedule.monday_start|time:"H:i" }}</td>
+            <td>{{ schedule.monday_end|time:"H:i" }}</td>
+            <td><span class="badge bg-success">Рабочий</span></td>
+          </tr>
+          <tr>
+            <td><i class="fas fa-circle text-success me-1" style="font-size:.6rem;"></i>Вторник</td>
+            <td>{{ schedule.tuesday_start|time:"H:i" }}</td>
+            <td>{{ schedule.tuesday_end|time:"H:i" }}</td>
+            <td><span class="badge bg-success">Рабочий</span></td>
+          </tr>
+          <tr>
+            <td><i class="fas fa-circle text-success me-1" style="font-size:.6rem;"></i>Среда</td>
+            <td>{{ schedule.wednesday_start|time:"H:i" }}</td>
+            <td>{{ schedule.wednesday_end|time:"H:i" }}</td>
+            <td><span class="badge bg-success">Рабочий</span></td>
+          </tr>
+          <tr>
+            <td><i class="fas fa-circle text-success me-1" style="font-size:.6rem;"></i>Четверг</td>
+            <td>{{ schedule.thursday_start|time:"H:i" }}</td>
+            <td>{{ schedule.thursday_end|time:"H:i" }}</td>
+            <td><span class="badge bg-success">Рабочий</span></td>
+          </tr>
+          <tr>
+            <td><i class="fas fa-circle text-success me-1" style="font-size:.6rem;"></i>Пятница</td>
+            <td>{{ schedule.friday_start|time:"H:i" }}</td>
+            <td>{{ schedule.friday_end|time:"H:i" }}</td>
+            <td><span class="badge bg-success">Рабочий</span></td>
+          </tr>
+          <tr>
+            {% if schedule.saturday_start %}
+            <td><i class="fas fa-circle text-warning me-1" style="font-size:.6rem;"></i>Суббота</td>
+            <td>{{ schedule.saturday_start|time:"H:i" }}</td>
+            <td>{{ schedule.saturday_end|time:"H:i" }}</td>
+            <td><span class="badge bg-warning text-dark">Сокращённый</span></td>
+            {% else %}
+            <td class="text-muted">Суббота</td>
+            <td class="text-muted">—</td>
+            <td class="text-muted">—</td>
+            <td><span class="badge bg-secondary">Выходной</span></td>
+            {% endif %}
+          </tr>
+          <tr>
+            <td class="text-muted">Воскресенье</td>
+            <td class="text-muted">—</td>
+            <td class="text-muted">—</td>
+            <td><span class="badge bg-secondary">Выходной</span></td>
+          </tr>
+          {% endwith %}
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+{% else %}
+
+  {# Расписание не задано #}
+  <div class="card shadow-sm">
+    <div class="card-body text-center py-5">
+      <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+      <h5 class="text-muted">Расписание не задано</h5>
+      <p class="text-muted small mb-0">
+        Для сотрудника {{ employee.get_full_name }} расписание ещё не настроено.<br>
+        Обратитесь к администратору системы.
+      </p>
+    </div>
+  </div>
+
+{% endif %}
+
+{% endblock %}
