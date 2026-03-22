@@ -3,6 +3,9 @@
 
 {% block title %}{{ page_title|default:"Публичный портал" }}{% endblock %}
 
+{# Отключаем хлебные крошки base.html — у нас свои внутри #}
+{% block breadcrumbs %}{% endblock %}
+
 {% block content %}
 <div class="container py-4">
 
@@ -25,11 +28,8 @@
         <li class="nav-item"><a class="nav-link" href="{% url 'public:news' %}">Новости</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'public:sitemap' %}">Карта сайта</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'public:contacts' %}">Обратная связь</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'core:login' %}">Вход</a></li>
-		{% if user.is_authenticated and user.role == "admin" or user.role == "employee" %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'public:staff_feedback_list' %}">Обращения (staff)</a>
-          </li>
+        {% if not user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'core:login' %}">Вход</a></li>
         {% endif %}
       </ul>
     </div>
@@ -57,14 +57,18 @@
     </div>
   </div>
 
-  <!-- Public footer -->
-  <footer class="text-center text-muted mt-4">
-    <small>
-      Автор: Российский Даниил Ильич. 2025–2026.
-      &nbsp;|&nbsp; <a href="{% url 'public:privacy' %}">Политика ПДн</a>
-      &nbsp;|&nbsp; <a href="{% url 'public:terms' %}">Соглашение</a>
-    </small>
-  </footer>
+  <!-- Public footer — единственный, глобальный скрыт через block -->
+	<div class="text-center text-muted mt-3 small">
+      Веб-приложение взаимодействия сотрудников и родителей<br>
+      Московский университет имени С.Ю. Витте<br>
+      <span class="mt-1 d-inline-block">
+        Автор: Российский Даниил Ильич. 2025–2026.
+        &nbsp;|&nbsp; <a href="{% url 'public:privacy' %}">Политика ПДн</a>
+        &nbsp;|&nbsp; <a href="{% url 'public:terms' %}">Соглашение</a>
+      </span>
+    </div>
+
 
 </div>
 {% endblock %}
+{% block site_footer %}{% endblock %}
