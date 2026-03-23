@@ -25,4 +25,6 @@ urlpatterns = [
     path("staff/feedback/", views.staff_feedback_list, name="staff_feedback_list"),
     path("staff/feedback/<str:public_id>/", views.staff_feedback_detail, name="staff_feedback_detail"),
     path("staff/feedback/<str:public_id>/attachment/", views.staff_feedback_attachment, name="staff_feedback_attachment"),
+    # ← новый маршрут:
+    path("staff/feedback/<str:public_id>/process/", views.staff_feedback_mark_processed, name="staff_feedback_mark_processed"),
 ]

@@ -113,3 +113,15 @@ def staff_feedback_attachment(request, public_id):
     filename = fb.file_name or "attachment.bin"
     resp["Content-Disposition"] = f'attachment; filename="{filename}"'
     return resp
+
+
+@login_required
+def staff_feedback_mark_processed(request, public_id):
+    if not _is_staff_role(request.user):
+        return HttpResponse("Доступ запрещён", status=403)
+    if request.method != 'POST':
+        return HttpResponse("Method Not Allowed", status=405)
+    fb = get_object_or_404(Feedback, public_id=public_id)
+    fb.status = Feedback.STATUS_PROCESSED
+    fb.save(update_fields=['status'])
+    return redirect('public:staff_feedback_detail', public_id=public_id)

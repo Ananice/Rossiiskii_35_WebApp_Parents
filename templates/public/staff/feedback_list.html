@@ -1,0 +1,80 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Обращения родителей — МУИВ{% endblock %}
+
+{% block content %}
+
+<div class="row mb-4">
+  <div class="col">
+    <h4 class="mb-0">
+      <i class="fas fa-inbox text-warning me-2"></i>Обращения родителей
+    </h4>
+    <small class="text-muted">Входящие обращения через форму обратной связи</small>
+  </div>
+</div>
+
+{% if items %}
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>№ обращения</th>
+          <th>Имя</th>
+          <th>Email</th>
+          <th>Тема</th>
+          <th>Дата</th>
+          <th>Статус</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fb in items %}
+        <tr>
+          <td>
+            <code class="small">{{ fb.public_id }}</code>
+          </td>
+          <td>{{ fb.name }}</td>
+          <td>
+            <a href="mailto:{{ fb.email }}" class="text-decoration-none small">
+              {{ fb.email }}
+            </a>
+          </td>
+          <td class="small">{{ fb.subject|default:"—"|truncatechars:40 }}</td>
+          <td class="small text-muted text-nowrap">
+            {{ fb.created_at|date:"d.m.Y H:i" }}
+          </td>
+          <td>
+            {% if fb.status == 'new' %}
+			  <span class="badge bg-primary">Новое</span>
+			{% else %}
+			  <span class="badge bg-secondary">Обработано</span>
+			{% endif %}
+          </td>
+          <td>
+            <a href="{% url 'public:staff_feedback_detail' fb.public_id %}"
+               class="btn btn-outline-primary btn-sm">
+              <i class="fas fa-eye me-1"></i>Открыть
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% else %}
+<div class="card shadow-sm">
+  <div class="card-body text-center py-5">
+    <i class="fas fa-inbox fa-3x text-muted mb-3 d-block opacity-25"></i>
+    <h5 class="text-muted">Обращений пока нет</h5>
+    <p class="text-muted small mb-0">
+      Когда родители отправят обращение через форму — они появятся здесь.
+    </p>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

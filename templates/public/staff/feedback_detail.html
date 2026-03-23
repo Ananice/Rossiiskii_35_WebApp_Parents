@@ -1,0 +1,131 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Обращение {{ fb.public_id }} — МУИВ{% endblock %}
+
+{% block content %}
+
+<div class="row mb-4">
+  <div class="col">
+    <h4 class="mb-0">
+      <i class="fas fa-envelope-open text-warning me-2"></i>
+      Обращение <code>{{ fb.public_id }}</code>
+    </h4>
+    <small class="text-muted">{{ fb.created_at|date:"d.m.Y H:i" }}</small>
+  </div>
+  <div class="col-auto">
+    <a href="{% url 'public:staff_feedback_list' %}"
+       class="btn btn-sm btn-outline-secondary">
+      <i class="fas fa-arrow-left me-1"></i>Назад
+    </a>
+  </div>
+</div>
+
+<div class="row">
+
+  {# Основная информация #}
+  <div class="col-md-8">
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-light">
+        <h6 class="mb-0"><i class="fas fa-info-circle me-1"></i>Данные обращения</h6>
+      </div>
+      <div class="card-body">
+        <dl class="row mb-0">
+          <dt class="col-sm-3">Имя</dt>
+          <dd class="col-sm-9">{{ fb.name }}</dd>
+
+          <dt class="col-sm-3">Email</dt>
+          <dd class="col-sm-9">
+            <a href="mailto:{{ fb.email }}">{{ fb.email }}</a>
+          </dd>
+
+          {% if fb.phone %}
+          <dt class="col-sm-3">Телефон</dt>
+          <dd class="col-sm-9">{{ fb.phone }}</dd>
+          {% endif %}
+
+          <dt class="col-sm-3">Тема</dt>
+          <dd class="col-sm-9">{{ fb.subject|default:"Не указана" }}</dd>
+
+          <dt class="col-sm-3">Статус</dt>
+          <dd class="col-sm-9">
+            {% if fb.status == 'new' %}
+			  <span class="badge bg-primary">Новое</span>
+			{% else %}
+			  <span class="badge bg-secondary">Обработано</span>
+			{% endif %}
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    {# Текст обращения #}
+    <div class="card shadow-sm">
+      <div class="card-header bg-light">
+        <h6 class="mb-0"><i class="fas fa-comment me-1"></i>Текст обращения</h6>
+      </div>
+      <div class="card-body">
+        <p class="mb-0" style="white-space: pre-wrap;">{{ fb.message }}</p>
+      </div>
+    </div>
+  </div>
+
+  {# Боковая панель #}
+  <div class="col-md-4">
+
+    {# Вложение — только для admin #}
+    {% if user.role == 'admin' and fb.file_data %}
+    <div class="card shadow-sm mb-3">
+      <div class="card-header bg-light">
+        <h6 class="mb-0"><i class="fas fa-paperclip me-1"></i>Вложение</h6>
+      </div>
+      <div class="card-body">
+        <p class="small text-muted mb-2">
+          {{ fb.file_name }}<br>
+          <span class="opacity-75">{{ fb.file_content_type }}</span>
+        </p>
+        <a href="{% url 'public:staff_feedback_attachment' fb.public_id %}"
+           class="btn btn-outline-secondary btn-sm">
+          <i class="fas fa-download me-1"></i>Скачать
+        </a>
+      </div>
+    </div>
+    {% endif %}
+
+    {# Служебная информация #}
+    <div class="card shadow-sm">
+      <div class="card-header bg-light">
+        <h6 class="mb-0"><i class="fas fa-clock me-1"></i>Служебная информация</h6>
+      </div>
+      <div class="card-body small text-muted">
+        <p class="mb-1"><strong>ID:</strong> {{ fb.public_id }}</p>
+        <p class="mb-0"><strong>Получено:</strong> {{ fb.created_at|date:"d.m.Y H:i" }}</p>
+      </div>
+    </div>
+    
+	{# Кнопка смены статуса #}
+	{% if fb.status == 'new' %}
+	<div class="card shadow-sm mt-3">
+	  <div class="card-body">
+		<p class="small text-muted mb-2">
+		  После ответа родителю отметьте обращение как обработанное.
+		</p>
+		<form method="post"
+			  action="{% url 'public:staff_feedback_mark_processed' fb.public_id %}">
+		  {% csrf_token %}
+		  <button type="submit" class="btn btn-success btn-sm w-100">
+			<i class="fas fa-check me-1"></i>Отметить как обработанное
+		  </button>
+		</form>
+	  </div>
+	</div>
+	{% else %}
+	<div class="alert alert-secondary mt-3 small mb-0">
+	  <i class="fas fa-check-circle me-1"></i>Обращение обработано
+	</div>
+	{% endif %}
+
+  </div>
+</div>
+
+{% endblock %}
