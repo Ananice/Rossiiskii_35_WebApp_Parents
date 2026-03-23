@@ -1,33 +1,36 @@
 {% extends "base/base.html" %}
 
-{% block title %}Отчёты — МУИВ Портал{% endblock %}
+{% block title %}Отчёты — МУИВ{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <h2 class="mb-4">
-            <i class="fas fa-file-excel text-success"></i> Отчёты и выгрузки
-        </h2>
-    </div>
+
+<div class="row mb-4">
+  <div class="col">
+    <h4 class="mb-0">
+      <i class="fas fa-file-excel text-success me-2"></i>Отчёты и выгрузки
+    </h4>
+    <small class="text-muted">Экспорт данных в формате Excel</small>
+  </div>
 </div>
 
 <div class="row">
-    <div class="col-md-6 col-lg-4">
-        <div class="card shadow-sm h-100">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <i class="fas fa-envelope text-primary"></i> Сообщения
-                </h5>
-                <p class="card-text text-muted">
-                    Выгрузка истории переписки в формате Excel (.xlsx).
-                    Содержит дату, отправителя, получателя и текст сообщений.
-                </p>
-                <a href="{% url 'reports:export_messages_xlsx' %}"
-                   class="btn btn-success">
-                    <i class="fas fa-download"></i> Скачать .xlsx
-                </a>
-            </div>
-        </div>
+  <div class="col-md-6 col-lg-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h6 class="card-title fw-semibold">
+          <i class="fas fa-envelope text-primary me-1"></i>Сообщения
+        </h6>
+        <p class="card-text text-muted small">
+          Выгрузка истории переписки в формате Excel (.xlsx).<br>
+          Содержит дату, отправителя, получателя и текст сообщений.
+          Максимум 200 последних записей.
+        </p>
+        <a href="{% url 'reports:export_messages_xlsx' %}" class="btn btn-success btn-sm">
+          <i class="fas fa-download me-1"></i>Скачать .xlsx
+        </a>
+      </div>
     </div>
+  </div>
 </div>
+
 {% endblock %}

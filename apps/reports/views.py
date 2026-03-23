@@ -1,4 +1,5 @@
 import io
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -12,7 +13,9 @@ def reports_index(request):
     ОПИСАНИЕ: Страница отчётов — список доступных выгрузок.
     Закрывает требование: личный кабинет (доп. страница на роль).
     """
-    from django.shortcuts import render
+    if getattr(request.user, 'role', None) == 'parent':
+        return redirect('core:dashboard')
+
     context = {
         'breadcrumbs': [
             {'title': 'Главная', 'url': '/', 'icon': 'fas fa-home'},
