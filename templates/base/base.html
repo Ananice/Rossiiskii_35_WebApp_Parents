@@ -50,7 +50,12 @@
                             <span class="navbar-text text-white-50">
                                 <i class="fas fa-user-circle me-1"></i>
                                 {{ user.get_full_name|default:user.username }}
-                                <small class="opacity-75 ms-1">({{ user.role }})</small>
+                                <small class="opacity-75 ms-1">
+								  ({% if user.role == 'admin' %}Администратор
+								  {% elif user.role == 'employee' %}Сотрудник
+								  {% elif user.role == 'parent' %}Родитель
+								  {% else %}Гость{% endif %})
+								</small>
                             </span>
                         </li>
                     {% endif %}
@@ -81,12 +86,14 @@
                         <i class="fas fa-envelope me-2"></i>Сообщения
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white {% if '/reports/' in request.path %}active bg-primary rounded{% endif %}"
-                       href="{% url 'reports:index' %}">
-                        <i class="fas fa-file-excel me-2"></i>Отчёты
-                    </a>
-                </li>
+                {% if user.role == 'employee' or user.role == 'admin' %}
+				<li class="nav-item">
+					<a class="nav-link text-white {% if '/reports/' in request.path %}active bg-primary rounded{% endif %}"
+					   href="{% url 'reports:index' %}">
+						<i class="fas fa-file-excel me-2"></i>Отчёты
+					</a>
+				</li>
+				{% endif %}
             </ul>
 
             <!-- ПУБЛИЧНЫЙ РАЗДЕЛ -->
