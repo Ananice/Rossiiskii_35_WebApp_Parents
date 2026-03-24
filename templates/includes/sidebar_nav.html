@@ -1,0 +1,139 @@
+<!-- ========================================================= -->
+<!-- ОБЩИЙ ШАБЛОН БОКОВОЙ НАВИГАЦИИ                            -->
+<!-- Используется и в desktop-sidebar, и в mobile offcanvas    -->
+<!-- ========================================================= -->
+
+<!-- ===================== ОСНОВНОЙ РАЗДЕЛ ===================== -->
+<p class="text-uppercase text-muted small mb-2 px-1">Навигация</p>
+<ul class="nav flex-column gap-1 mb-3">
+
+    <!-- Панель управления -->
+    <li class="nav-item">
+        <a class="nav-link text-white {% if request.path == '/dashboard/' %}active bg-primary rounded{% endif %}"
+           href="{% url 'core:dashboard' %}">
+            <i class="fas fa-tachometer-alt me-2"></i>Панель управления
+        </a>
+    </li>
+
+    <!-- Сообщения -->
+    <li class="nav-item">
+        <a class="nav-link text-white {% if '/messages/' in request.path %}active bg-primary rounded{% endif %}"
+           href="{% url 'core:messages' %}">
+            <i class="fas fa-envelope me-2"></i>Сообщения
+        </a>
+    </li>
+
+    <!-- Отчёты: только для сотрудника и администратора -->
+    {% if user.role == 'employee' or user.role == 'admin' %}
+    <li class="nav-item">
+        <a class="nav-link text-white {% if '/reports/' in request.path %}active bg-primary rounded{% endif %}"
+           href="{% url 'reports:index' %}">
+            <i class="fas fa-file-excel me-2"></i>Отчёты
+        </a>
+    </li>
+    {% endif %}
+</ul>
+
+<!-- ===================== ПУБЛИЧНЫЕ МАТЕРИАЛЫ ===================== -->
+<p class="text-uppercase text-muted small mb-2 px-1">Информация</p>
+<ul class="nav flex-column gap-1 mb-3">
+
+    <!-- Документы -->
+    <li class="nav-item">
+        <a class="nav-link text-white {% if '/docs/' in request.path %}active bg-primary rounded{% endif %}"
+           href="{% url 'public:docs' %}">
+            <i class="fas fa-folder-open me-2"></i>Документы
+        </a>
+    </li>
+
+    <!-- Новости -->
+    <li class="nav-item">
+        <a class="nav-link text-white {% if '/news/' in request.path %}active bg-primary rounded{% endif %}"
+           href="{% url 'public:news' %}">
+            <i class="fas fa-newspaper me-2"></i>Новости
+        </a>
+    </li>
+
+    <!-- FAQ -->
+    <li class="nav-item">
+        <a class="nav-link text-white {% if '/faq/' in request.path %}active bg-primary rounded{% endif %}"
+           href="{% url 'public:faq' %}">
+            <i class="fas fa-question-circle me-2"></i>Вопросы и ответы
+        </a>
+    </li>
+
+    <!-- Контакты -->
+    <li class="nav-item">
+        <a class="nav-link text-white {% if '/contacts/' in request.path %}active bg-primary rounded{% endif %}"
+           href="{% url 'public:contacts' %}">
+            <i class="fas fa-phone-alt me-2"></i>Контакты
+        </a>
+    </li>
+</ul>
+
+<!-- ===================== УПРАВЛЕНИЕ ===================== -->
+<!-- Видно только сотруднику и администратору -->
+{% if user.role == 'employee' or user.role == 'admin' %}
+<p class="text-uppercase text-muted small mb-2 px-1">Управление</p>
+<ul class="nav flex-column gap-1 mb-3">
+
+    <!-- Обращения родителей -->
+    <li class="nav-item">
+        <a class="nav-link text-white {% if '/feedback/' in request.path %}active bg-primary rounded{% endif %}"
+           href="{% url 'public:staff_feedback_list' %}">
+            <i class="fas fa-inbox me-2"></i>Обращения родителей
+        </a>
+    </li>
+
+    <!-- Список родителей -->
+    <li class="nav-item">
+        <a class="nav-link text-white {% if '/parents/' in request.path and 'relation' not in request.path %}active bg-primary rounded{% endif %}"
+           href="{% url 'parents:parent-list' %}">
+            <i class="fas fa-users me-2"></i>Родители
+        </a>
+    </li>
+
+    <!-- Связи родитель–студент -->
+    <li class="nav-item">
+        <a class="nav-link text-white {% if 'relations' in request.path %}active bg-primary rounded{% endif %}"
+           href="{% url 'parents:relation-list' %}">
+            <i class="fas fa-link me-2"></i>Связи родитель–студент
+        </a>
+    </li>
+
+    <!-- Сотрудники -->
+    <li class="nav-item">
+        <a class="nav-link text-white {% if '/employees/' in request.path %}active bg-primary rounded{% endif %}"
+           href="{% url 'employees:employee_list' %}">
+            <i class="fas fa-user-tie me-2"></i>Сотрудники
+        </a>
+    </li>
+
+    <!-- Контактные лица -->
+    <li class="nav-item">
+        <a class="nav-link text-white {% if '/contact-persons/' in request.path %}active bg-primary rounded{% endif %}"
+           href="{% url 'employees:contact_persons_list' %}">
+            <i class="fas fa-address-book me-2"></i>Контактные лица
+        </a>
+    </li>
+
+    <!-- Django Admin -->
+    {% if user.role == 'admin' %}
+    <li class="nav-item">
+        <a class="nav-link text-white {% if '/admin/' in request.path %}active bg-primary rounded{% endif %}"
+           href="{% url 'admin:index' %}">
+            <i class="fas fa-cog me-2"></i>Django Admin
+        </a>
+    </li>
+    {% endif %}
+</ul>
+{% endif %}
+
+<!-- ===================== ВЫХОД ИЗ СИСТЕМЫ ===================== -->
+<div class="mt-auto">
+    <hr class="border-secondary">
+
+    <a class="nav-link text-white-50 small" href="{% url 'core:logout' %}">
+        <i class="fas fa-sign-out-alt me-2"></i>Выйти из системы
+    </a>
+</div>

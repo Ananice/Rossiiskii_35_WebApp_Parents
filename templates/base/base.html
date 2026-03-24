@@ -3,207 +3,136 @@
 <html lang="ru">
 <head>
     <!-- ===================== META ТЕГИ ===================== -->
-    <!-- Кодировка текста: чтобы кириллица отображалась правильно -->
+    <!-- Кодировка документа: нужна для корректного отображения кириллицы -->
     <meta charset="UTF-8">
-    
-    <!-- Масштабирование для мобильных устройств -->
+
+    <!-- Адаптивная ширина экрана для мобильных устройств -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Заголовок страницы (что видно в браузерной вкладке) -->
+
+    <!-- Заголовок вкладки браузера -->
     <title>{% block title %}Портал взаимодействия МУИВ{% endblock %}</title>
 
     <!-- ===================== ВНЕШНИЕ БИБЛИОТЕКИ ===================== -->
-    <!-- Bootstrap 5 - фреймворк для красивых кнопок, форм, таблиц -->
+    <!-- Bootstrap 5: сетка, кнопки, offcanvas, формы, таблицы -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome - иконки (звёздочки, сердца, стрелки и т.д.) -->
+
+    <!-- Font Awesome: иконки для меню и интерфейса -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- ===================== НАШИ СТИЛИ ===================== -->
-    <!-- Подключаем наш CSS файл из папки static/css/ -->
+    <!-- Общий CSS проекта -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    
-    <!-- Место для дополнительных стилей конкретной страницы -->
+
+    <!-- Дополнительные стили конкретной страницы -->
     {% block extra_css %}{% endblock %}
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+    <!-- ===================== ВЕРХНЯЯ ПАНЕЛЬ (NAVBAR) ===================== -->
+    <!-- Navbar всегда остаётся сверху.
+         На мобильных в нём показываем кнопку открытия бокового меню.
+         На desktop основная навигация остаётся в левом sidebar. -->
+    <nav class="navbar navbar-dark bg-primary sticky-top shadow-sm">
         <div class="container-fluid">
 
-            <!-- ЛОГОТИП -->
-            <a class="navbar-brand" href="/">
-                <i class="fas fa-graduation-cap"></i> МУИВ Портал
+            <!-- КНОПКА BURGER: показывается только авторизованным и только на mobile/tablet -->
+            {% if user.is_authenticated %}
+            <button
+                class="btn btn-primary d-lg-none me-2"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#mobileSidebar"
+                aria-controls="mobileSidebar"
+                aria-label="Открыть меню навигации">
+                <i class="fas fa-bars"></i>
+            </button>
+            {% endif %}
+
+            <!-- ЛОГОТИП / БРЕНД -->
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                <i class="fas fa-graduation-cap"></i>
+                <span>МУИВ Портал</span>
             </a>
 
-            <!-- КНОПКА ДЛЯ МОБИЛЬНЫХ -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- МЕНЮ СПРАВА -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    {% if user.is_authenticated %}
-                        <!-- Только имя и роль — всё остальное в сайдбаре -->
-                        <li class="nav-item">
-                            <span class="navbar-text text-white-50">
-                                <i class="fas fa-user-circle me-1"></i>
-                                {{ user.get_full_name|default:user.username }}
-                                <small class="opacity-75 ms-1">
-								  ({% if user.role == 'admin' %}Администратор
-								  {% elif user.role == 'employee' %}Сотрудник
-								  {% elif user.role == 'parent' %}Родитель
-								  {% else %}Гость{% endif %})
-								</small>
-                            </span>
-                        </li>
+            <!-- ИНФОРМАЦИЯ О ПОЛЬЗОВАТЕЛЕ -->
+            <!-- Оставляем её справа, но не превращаем в отдельное раскрывающееся меню,
+                 чтобы navbar не был перегружен на телефоне. -->
+            {% if user.is_authenticated %}
+            <div class="ms-auto text-end text-white-50 small">
+                <div class="fw-semibold text-white">
+                    <i class="fas fa-user-circle me-1"></i>
+                    {{ user.get_full_name|default:user.username }}
+                </div>
+                <div class="opacity-75">
+                    {% if user.role == 'admin' %}
+                        Администратор
+                    {% elif user.role == 'employee' %}
+                        Сотрудник
+                    {% elif user.role == 'parent' %}
+                        Родитель
+                    {% elif user.role == 'student' %}
+                        Обучающийся
+                    {% else %}
+                        Гость
                     {% endif %}
-                </ul>
+                </div>
             </div>
+            {% endif %}
 
         </div>
     </nav>
 
-    <!-- ===================== ОСНОВНОЙ КОНТЕНТ С САЙДБАРОМ ===================== -->
+    <!-- ===================== МОБИЛЬНОЕ БОКОВОЕ МЕНЮ (OFFCANVAS) ===================== -->
+    <!-- На смартфонах и планшетах sidebar не должен постоянно занимать ширину экрана.
+         Поэтому на размерах меньше lg показываем его как выезжающее меню. -->
+    {% if user.is_authenticated %}
+    <div class="offcanvas offcanvas-start text-bg-dark d-lg-none" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="mobileSidebarLabel">
+                <i class="fas fa-bars me-2"></i>Навигация
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+        </div>
+
+        <div class="offcanvas-body d-flex flex-column p-3">
+            <!-- Один и тот же include используем и для mobile, и для desktop,
+                 чтобы не дублировать код меню в двух местах -->
+            {% include "includes/sidebar_nav.html" %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ===================== ОСНОВНОЙ LAYOUT ===================== -->
+    <!-- На desktop: sidebar слева + контент справа.
+         На mobile: sidebar скрыт, остаётся только основной контент. -->
     <div class="d-flex flex-grow-1">
 
-        <!-- БОКОВОЕ МЕНЮ (только для авторизованных) -->
+        <!-- DESKTOP SIDEBAR -->
         {% if user.is_authenticated %}
-        <nav class="sidebar bg-dark text-white d-flex flex-column p-3" style="min-width:220px; align-self:stretch;">
-
-            <p class="text-uppercase text-muted small mb-2 px-1">Навигация</p>
-            <ul class="nav flex-column gap-1 mb-3">
-                <li class="nav-item">
-                    <a class="nav-link text-white {% if request.path == '/dashboard/' %}active bg-primary rounded{% endif %}"
-                       href="{% url 'core:dashboard' %}">
-                        <i class="fas fa-tachometer-alt me-2"></i>Панель управления
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white {% if '/messages/' in request.path %}active bg-primary rounded{% endif %}"
-                       href="{% url 'core:messages' %}">
-                        <i class="fas fa-envelope me-2"></i>Сообщения
-                    </a>
-                </li>
-                {% if user.role == 'employee' or user.role == 'admin' %}
-				<li class="nav-item">
-					<a class="nav-link text-white {% if '/reports/' in request.path %}active bg-primary rounded{% endif %}"
-					   href="{% url 'reports:index' %}">
-						<i class="fas fa-file-excel me-2"></i>Отчёты
-					</a>
-				</li>
-				{% endif %}
-            </ul>
-
-            <!-- ПУБЛИЧНЫЙ РАЗДЕЛ -->
-            <p class="text-uppercase text-muted small mb-2 px-1">Информация</p>
-            <ul class="nav flex-column gap-1 mb-3">
-                <li class="nav-item">
-                    <a class="nav-link text-white {% if '/docs/' in request.path %}active bg-primary rounded{% endif %}" href="{% url 'public:docs' %}">
-                        <i class="fas fa-folder-open me-2"></i>Документы
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white {% if '/news/' in request.path %}active bg-primary rounded{% endif %}" href="{% url 'public:news' %}">
-                        <i class="fas fa-newspaper me-2"></i>Новости
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white {% if '/faq/' in request.path %}active bg-primary rounded{% endif %}" href="{% url 'public:faq' %}">
-                        <i class="fas fa-question-circle me-2"></i>Вопросы и ответы
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white {% if '/contacts/' in request.path %}active bg-primary rounded{% endif %}" href="{% url 'public:contacts' %}">
-                        <i class="fas fa-phone-alt me-2"></i>Контакты
-                    </a>
-                </li>
-            </ul>
-
-            <!-- ДЛЯ СОТРУДНИКА И АДМИНИСТРАТОРА -->
-            {% if user.role == 'employee' or user.role == 'admin' %}
-			<p class="text-uppercase text-muted small mb-2 px-1">Управление</p>
-			<ul class="nav flex-column gap-1 mb-3">
-
-				<!-- Обращения родителей -->
-				<li class="nav-item">
-					<a class="nav-link text-white {% if '/feedback/' in request.path %}active bg-primary rounded{% endif %}"
-					   href="{% url 'public:staff_feedback_list' %}">
-						<i class="fas fa-inbox me-2"></i>Обращения родителей
-					</a>
-				</li>
-
-				<!-- Список родителей -->
-				<li class="nav-item">
-					<a class="nav-link text-white {% if '/parents/' in request.path and 'relation' not in request.path %}active bg-primary rounded{% endif %}"
-					   href="{% url 'parents:parent-list' %}">
-						<i class="fas fa-users me-2"></i>Родители
-					</a>
-				</li>
-
-				<!-- Связи родитель–студент -->
-				<li class="nav-item">
-					<a class="nav-link text-white {% if 'relations' in request.path %}active bg-primary rounded{% endif %}"
-					   href="{% url 'parents:relation-list' %}">
-						<i class="fas fa-link me-2"></i>Связи родитель–студент
-					</a>
-				</li>
-
-				<!-- Сотрудники -->
-				<li class="nav-item">
-					<a class="nav-link text-white {% if '/employees/' in request.path %}active bg-primary rounded{% endif %}"
-					   href="{% url 'employees:employee_list' %}">
-						<i class="fas fa-user-tie me-2"></i>Сотрудники
-					</a>
-				</li>
-
-				<!-- Контактные лица -->
-				<li class="nav-item">
-					<a class="nav-link text-white {% if '/contact-persons/' in request.path %}active bg-primary rounded{% endif %}"
-					   href="{% url 'employees:contact_persons_list' %}">
-						<i class="fas fa-address-book me-2"></i>Контактные лица
-					</a>
-				</li>
-
-				<!-- Django Admin — только для admin -->
-				{% if user.role == 'admin' %}
-				<li class="nav-item">
-					<a class="nav-link text-white" href="{% url 'admin:index' %}">
-						<i class="fas fa-cog me-2"></i>Django Admin
-					</a>
-				</li>
-				{% endif %}
-
-			</ul>
-			{% endif %}
-
-
-            <!-- ПРОФИЛЬ И ВЫХОД -->
-            <div class="mt-auto">
-                <hr class="border-secondary">
-                <a class="nav-link text-white-50 small" href="{% url 'core:logout' %}">
-                    <i class="fas fa-sign-out-alt me-2"></i>Выйти из системы
-                </a>
-            </div>
-        </nav>
+        <aside class="sidebar bg-dark text-white d-none d-lg-flex flex-column p-3 border-end border-secondary-subtle"
+               style="width: 260px; min-height: 100%;">
+            {% include "includes/sidebar_nav.html" %}
+        </aside>
         {% endif %}
 
-        <!-- ОСНОВНОЙ КОНТЕНТ -->
-        <main class="flex-grow-1">
-            <div class="container-fluid py-4">
+        <!-- ОСНОВНАЯ ОБЛАСТЬ СТРАНИЦЫ -->
+        <!-- min-width:0 помогает корректно сжиматься flex-элементу и
+             уменьшает риск горизонтального скролла на сложных страницах -->
+        <main class="flex-grow-1" style="min-width: 0;">
+            <div class="container-fluid py-3 py-md-4 px-3 px-md-4">
 
+                <!-- ===================== FLASH-СООБЩЕНИЯ ===================== -->
                 {% if messages %}
                     {% for message in messages %}
                         <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                             {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
                         </div>
                     {% endfor %}
                 {% endif %}
 
-
-                <!-- ===================== ХЛЕБНЫЕ КРОШКИ (BREADCRUMBS) ===================== -->
+                <!-- ===================== ХЛЕБНЫЕ КРОШКИ ===================== -->
                 {% block breadcrumbs %}
                 {% if breadcrumbs %}
                 <nav aria-label="breadcrumb" class="mb-3">
@@ -212,7 +141,7 @@
                             {% if forloop.last %}
                                 <li class="breadcrumb-item active" aria-current="page">
                                     {% if crumb.icon %}<i class="{{ crumb.icon }}"></i> {% endif %}
-                                   {{ crumb.title }}
+                                    {{ crumb.title }}
                                 </li>
                             {% else %}
                                 <li class="breadcrumb-item">
@@ -225,39 +154,41 @@
                         {% endfor %}
                     </ol>
                 </nav>
-               {% endif %}
+                {% endif %}
                 {% endblock breadcrumbs %}
-                <!-- СОДЕРЖИМОЕ КОНКРЕТНОЙ СТРАНИЦЫ -->
-                <!-- Контент конкретной страницы будет подставляться ниже -->
-			    {% block content %}{% endblock %}
+
+                <!-- ===================== ОСНОВНОЙ КОНТЕНТ СТРАНИЦЫ ===================== -->
+                {% block content %}{% endblock %}
             </div>
         </main>
-
     </div>
-    <!-- ===================== ПОДВАЛ (FOOTER) ===================== -->
-    <!-- Информация о приложении внизу страницы -->
+
+    <!-- ===================== ПОДВАЛ ===================== -->
+    <!-- Для неавторизованных пользователей подвал оставляем публичным и информативным -->
     {% block site_footer %}
-	{% if not user.is_authenticated %}
-	<div class="text-center text-muted mt-3 small">
-      Веб-приложение взаимодействия сотрудников и родителей<br>
-      Московский университет имени С.Ю. Витте<br>
-      <span class="mt-1 d-inline-block">
-        Автор: Российский Даниил Ильич. 2025–2026.
-        &nbsp;|&nbsp; <a href="{% url 'public:privacy' %}">Политика ПДн</a>
-        &nbsp;|&nbsp; <a href="{% url 'public:terms' %}">Соглашение</a>
-      </span>
-    </div>
-	{% endif %}
-	{% endblock %}
+    {% if not user.is_authenticated %}
+    <footer class="mt-auto">
+        <div class="text-center text-muted py-3 small">
+            Веб-приложение взаимодействия сотрудников и родителей<br>
+            Московский университет имени С.Ю. Витте<br>
+            <span class="mt-1 d-inline-block">
+                Автор: Российский Даниил Ильич. 2025–2026.
+                &nbsp;|&nbsp; <a href="{% url 'public:privacy' %}">Политика ПДн</a>
+                &nbsp;|&nbsp; <a href="{% url 'public:terms' %}">Соглашение</a>
+            </span>
+        </div>
+    </footer>
+    {% endif %}
+    {% endblock %}
 
-    <!-- ===================== ПОДКЛЮЧЕНИЕ JAVASCRIPT БИБЛИОТЕК ===================== -->
-    <!-- Bootstrap JS - нужен для интерактивных элементов (меню, модальные окна и т.д.) -->
+    <!-- ===================== JAVASCRIPT ===================== -->
+    <!-- Bootstrap bundle нужен для navbar, offcanvas, alert dismiss и других компонентов -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- НАШ СОБСТВЕННЫЙ JS ФАЙЛ (функции, события и т.д.) -->
+
+    <!-- Общий JS проекта -->
     <script src="{% static 'js/script.js' %}"></script>
-    
-    <!-- Место для дополнительных скриптов конкретной страницы -->
+
+    <!-- Дополнительные скрипты конкретной страницы -->
     {% block extra_js %}{% endblock %}
 </body>
 </html>
