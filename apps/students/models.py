@@ -1,4 +1,4 @@
-from django.db import models
+﻿from django.db import models
 from django.conf import settings
 
 from apps.parents.models import Parent
@@ -14,16 +14,20 @@ class Student(models.Model):
         blank=True
     )
 
-    # То, что уже используется в views.py
+    # Поля, которые уже используются в views.py дашборда
     full_name = models.CharField(max_length=255)
     student_id = models.CharField(max_length=50, unique=True)
     group = models.CharField(max_length=50, blank=True, null=True)
     specialty = models.CharField(max_length=255, blank=True, null=True)
     gpa = models.DecimalField(max_digits=3, decimal_places=2, blank=True, null=True)
 
-    # Связи, которые подразумеваются логикой дашборда
+    # Связи с родителем и куратором
     parent = models.ForeignKey(Parent, on_delete=models.SET_NULL, null=True, blank=True)
     advisor = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Студент"
+        verbose_name_plural = "Студенты"
 
     def __str__(self):
         return f"{self.full_name} ({self.student_id})"
