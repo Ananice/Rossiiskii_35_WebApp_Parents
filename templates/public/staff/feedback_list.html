@@ -15,9 +15,11 @@
 </div>
 
 {% if items %}
-<div class="card shadow-sm">
+
+<!-- ===================== DESKTOP / TABLET ===================== -->
+<div class="card shadow-sm d-none d-md-block">
   <div class="table-responsive">
-    <table class="table table-hover mb-0">
+    <table class="table table-hover mb-0 align-middle">
       <thead class="table-light">
         <tr>
           <th>№ обращения</th>
@@ -47,10 +49,10 @@
           </td>
           <td>
             {% if fb.status == 'new' %}
-			  <span class="badge bg-primary">Новое</span>
-			{% else %}
-			  <span class="badge bg-secondary">Обработано</span>
-			{% endif %}
+              <span class="badge bg-primary">Новое</span>
+            {% else %}
+              <span class="badge bg-secondary">Обработано</span>
+            {% endif %}
           </td>
           <td>
             <a href="{% url 'public:staff_feedback_detail' fb.public_id %}"
@@ -63,6 +65,48 @@
       </tbody>
     </table>
   </div>
+</div>
+
+<!-- ===================== MOBILE ===================== -->
+<div class="d-md-none">
+  {% for fb in items %}
+  <div class="card shadow-sm mb-3">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+        <code class="small">{{ fb.public_id }}</code>
+
+        {% if fb.status == 'new' %}
+          <span class="badge bg-primary">Новое</span>
+        {% else %}
+          <span class="badge bg-secondary">Обработано</span>
+        {% endif %}
+      </div>
+
+      <h6 class="mb-2">{{ fb.name }}</h6>
+
+      <p class="mb-1 small">
+        <strong>Email:</strong>
+        <a href="mailto:{{ fb.email }}" class="text-decoration-none">
+          {{ fb.email }}
+        </a>
+      </p>
+
+      <p class="mb-1 small">
+        <strong>Тема:</strong>
+        {{ fb.subject|default:"—"|truncatechars:80 }}
+      </p>
+
+      <p class="mb-3 small text-muted">
+        <strong>Дата:</strong> {{ fb.created_at|date:"d.m.Y H:i" }}
+      </p>
+
+      <a href="{% url 'public:staff_feedback_detail' fb.public_id %}"
+         class="btn btn-outline-primary btn-sm w-100">
+        <i class="fas fa-eye me-1"></i>Открыть обращение
+      </a>
+    </div>
+  </div>
+  {% endfor %}
 </div>
 
 {% else %}
